@@ -1,0 +1,18 @@
+== Premessa
+(((1. Premessa)))
+
+
+Il presente documento ha lo scopo di descrivere le specifiche tecniche dei servizi esposti da NoTI-ER
+(Nodo Telematico di Interscambio della Regione Emilia-Romagna). +
+Tali servizi sono:
+
+* invio documento;
+* recupero lista documenti;
+* recupero documento;
+* integrazione dati fiscali;
+* interrogazione Peppol Directory;
+* look-up participant ID;
+* web service blocco conservazione.
+
+Le tipologie di documento gestite da NoTI-ER sono: _Fattura, Nota di Credito, Ordine e Documento di
+Trasporto_.

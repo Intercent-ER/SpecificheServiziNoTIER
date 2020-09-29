@@ -1,0 +1,27 @@
+== Note generali
+(((2. Note generali)))
+
+=== Protocollo di comunicazione
+
+I servizi offerti utilizzano il protocollo HTTP ed espongono delle *API REST*. In particolare, i metodi
+HTTP previsti sono *GET* e *POST*.
+
+=== Sicurezza
+
+Tutte le comunicazioni avvengono su protocollo HTTPS. +
+L’autenticazione e successiva autorizzazione dei _client_ avviene tramite certificato X.509, inviato dai
+client stessi al momento della chiamata.
+
+=== Formato
+
+Le API REST prevedono un dialogo basato sul linguaggio XML. +
+Tutti i documenti e i metadati che vengono scambiati fra i client e NoTI-ER hanno content-type
+*_“application/xml”_* e charset *_“utf-8”_*.
+
+=== Disponibilità
+
+In caso di indisponibilità del servizio, l’applicativo chiamante potrebbe:
+
+* non ottenere alcuna risposta (in tal caso, se previsto dal client, nella logica applicativa
+potrebbe attivarsi un _timeout_);
+* ottenere una risposta con codice _HTTP 503_.

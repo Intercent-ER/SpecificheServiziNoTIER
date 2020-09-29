@@ -1,0 +1,305 @@
+== Servizio di invio documento
+(((4. Servizio di invio documento)))
+
+Il servizio di *invio documento* consente al chiamante di inoltrare un documento a NoTI-ER. +
+L’applicativo chiamante invoca il servizio inviando tramite una POST HTTP due file:
+
+* un file XML contenente i *metadati* necessari affinché il documento venga acquisito ed
+elaborato correttamente;
+* un file contenente il *documento* oggetto dell'invio.
+
+=== Formato dei documenti
+
+Considerato che NoTI-ER svolge la funzione di intermediario _SdI, NSO, Peppol_ e il sistema di
+conservazione _ParER_, si rende necessario che i documenti inviati tramite questo servizio siano in
+uno dei formati XML previsti. +
+A tali formati corrispondono specifici *schema XSD* ed è [underline]#compito del client comporre documenti XML
+in grado di superare la validazione effettuata da NoTI-ER che avviene contestualmente all’invio.# +
+In particolare, per quello che riguarda gli schema XSD relativi a:
+
+* documenti SdI, si può fare riferimento alla documentazione disponibile all’indirizzo
+http://www.fatturapa.gov.it/;
+* documenti Peppol, si può fare riferimento alla documentazione Peppol dei relativi profili
+UBL;
+* documenti ParER (_notifiche di esito conservazione_), si può fare riferimento alla
+documentazione disponibile sul sito :
+https://parer.ibc.regione.emiliaromagna.it/documentazione/specifiche_tecniche_servizi_di_recupero footnote:[è previsto che il client sia in grado di acquisire il solo formato XML dell’_esito di invio in conservazione_.].
+
+Allo stato attuale, i formati associabili ai vari tipi di documenti sono i seguenti:
+
+[width="100%",cols="^,^,^">,options="header,footer"]
+|===
+|TIPO DOCUMENTO | FORMATO | VERSIONE
+1.2+.^s| Fattura ^.^| UBL ^.^| 2.1 ^.^| SDI footnote:[nel caso di fattura/NdC in formato SDI, questa deve pervenire a NoTI-ER già firmata, come previsto dalle specifiche di
+servizio SdI. Tale formato è supportato solamente ai fini del versamento in ParER e [underline]#non è ammesso per l’invio a SdI.#] ^.^| 1.1
+^.^s| Notifica di esito committente ^.^|SDI ^.^|1.0
+1.2+.^s| Nota di credito ^.^| UBL ^.^| 2.1 ^.^| SDI | 1.1
+s| Ordine | BIS_3 | 2.1
+1.2+.^s| Documento di Trasporto | UBL footnote:[questo formato è ammesso fino al 30/09/2020, data a partire dal quale verrà dismesso.] | 2.1 | BIS_3 | 2.1
+|||
+|===
+
+=== URL di invocazione
+
+L’URL per invocare il servizio di invio documento è composto come segue:
+
+POST [blue]#https://# [red]#<host-NoTIER>:<porta-NoTIER># [blue]#/notier/rest/v1.0/documenti/invio#
+
+=== Richiesta
+
+La *request* deve essere una *POST HTTP* all’indirizzo specificato al paragrafo precedente e deve:
+
+* specificare un request header *content-type* di tipo “*multipart/form-data*”;
+* specificare un payload composto da due parti, ciascuna delle quali identificata da un payload
+header *content-disposition “form-data”* come segue:
+** attributo *name = metadati* per l’XML dei metadati;
+** attributo *name = documento* per l’XML del documento;
+** attributo filename valorizzatofootnote:[il nome del file può essere qualsiasi.]
+* come descritto nel paragrafo 2.3., ciascuna componente del payload dovrà avere un _payload
+header_ *content-type “application/xml”, “charset = utf-8”*.
+
+Per un esempio di request, fare riferimento al paragrafo A.1.
+
+==== Formato del file XML dei metadati di richiesta
+
+I metadati da inviare nella richiesta sono descritti dal XSD di invio documento. +
+Di seguito la descrizione dei campi dichiarati all'interno dello schema.
+
+[width="100%",cols="^,^,^,^,^,^">,options="header,footer"]
+|===
+|Tag XML | Descrizione | Vincoli | Tipo dato | Esempio | Obbl.
+6.1+^s| Inizio sessione <InvioDocumento> [1..1]
+s| Versione | Versione del XML del servizio di invio documento | 10 caratteri max | Stringa | 1.0 | Sì
+6.1+^s| Inizio sessione <InvioDocumento>/<Documento> [1..1]
+6.1+^s| Inizio sessione <InvioDocumento>/<Documento>/<Chiave> [1..1]
+s| Mittente | Codice identificativo delmittente del documento | 50 caratteri max | Stringa | ORG-ENTE-1 | Sì
+s| TipoMittente | Definisce la tipologia di codice presente nel campo Mittente | Valore ammesso: NOTIER | Tipo predefinito | NOTIER | Sì
+s| Anno | Anno del documento | 4 caratteri | Numerico | 2020 | Sì
+s| Numero footnote:[Il valore nel campo deve coincidere con il *cbc:ID* (_Document Identifier_) riportato nella Testata del Documento XML.
+Tale valore è oggetto di controllo anche in fase di versamento in conservazione.] | *Fattura/NdC* +
+Numero del documento che deve essere univoco e riportare: +
+- registro fattura +
+- anno (nel caso in cui il numero progressivo venga azzerato all'inizio di ogni anno, diversamente non è necessario) +
+- numero progressivo +
+
+*Ordine/DDT* +
+Numero del documento che identifica univocamente l'ordine/DDT
+ | 50 caratteri max | Stringa | Esempio 1: +
+300-2014-000001
+
+Esempio 2: +
+300-0000000001 | Sì
+s| Tipo Documento | Valori ammessi: +
+
+- FATTURA +
+- NOTA_DI_CREDITO +
+- ORDINE +
+- DOCUMENTO_DI_TRASPORTO +
+- NOTIFICA_DI_ESITO_COMMITTENTE
+| Tipo predefinito | Stringa | FATTURA | Sì
+6.1+^s| Fine sessione <InvioDocumento>/<Documento>/<Chiave>
+6.1+^s| Inizio sessione <InvioDocumento>/<Documento>/<Rappresentazione> [1..1]
+s| Formato | Formato del documento | Valori ammessi: +
+- UBL +
+- SDI +
+- BIS_3 | Tipo predefinito | UBL | Sì
+s| Versione | Versione del formato del documento | 10 caratteri max | Stringa | 1.0 | Sì
+6.1+^s| Fine sessione <InvioDocumento>/<Documento>/<Rappresentazione>
+6.1+^s| Fine sessione <InvioDocumento>/<Documento>
+6.1+^s| Inizio sessione <InvioDocumento>/<Configurazione> [1..1]
+s| InvioSdifootnote:[il valore di questo flag è significativo solo nel caso in cui si parli di fatture/NdC] | Indica se il documento è da inoltrare a SdI | Se posto a _true_ allora il tag _<InvioPeppol>_ deve essere _false_ | Booleano | true | Sì
+s| InvioPeppol | Indica se il documento è da inoltrare ad un altro Access Point su rete BusDox-Peppol | Se posto a _true_ allora il tag _<InvioSdi>_ deve essere _false_ | Booleano | true | Sì
+s| InvioConservazione | Indica se il documento è da archiviare in conservazione | Se _<InvioSdi> e <InvioPeppol>_ sono entrambi impostati a _false_ allora deve valere _true_ | Booleano | true | Sì
+s| ApprovazioneAutomatica | Indica se il documento, una volta trasformato e firmato, è da considerarsi automaticamente approvato e quindi idoneo all'invio verso SdI | - | Booleano | true | Sì
+s| AccettaChiaveDuplicatafootnote:[il flag deve essere abilitato nel caso in cui si voglia sovrascrivere un documento già inviato in precedenza. Ad esempio,
+è il caso di una fattura che ha ricevuto una _notifica di scarto_ da parte di SdI, o una _notifica di esito cedente_ con causale
+negativa. Ricevendo un documento con chiave duplicata, NoTI-ER procede ad effettuare un versionamento
+(mantenendo comunque lo storico documentale).] | Se posto a _true_ consente al trasmittente di inviare un documento avente la medesima chiave di un documento già presente nel sistema  | - | Booleano | true | Sì
+6.1+^s| Fine sessione <InvioDocumento>/<Configurazione>
+6.1+^s| Inizio sessione <InvioDocumento>/<Integrazione> [0..1]
+s| Registro | identificativo del registro o del tipo di registrodella fattura o della NdC | 100 caratteri maxfootnote:[la stringa deve iniziare con un carattere alfanumerico oppure con "_ " e non può contenere caratteri speciali, ad esclusione di "_", "-", ".".] | Stringa | _Aa.99-2 | Sì, se il tipo di documento è Fattura o Nota di credito
+6.1+^s| Fine sessione <InvioDocumento>/<Integrazione>
+6.1+^s| Inizio sessione <InvioDocumento>/<Collegamento>footnote:[è possibile specificare un collegamento fra documenti principali. Ad esempio, ad una fattura può essere collegato un
+ordine specificandone l’urn.] [0..1]
+s| Urn | URN NoTI-ER del documento da collegare | 256 caratteri max | Stringa | urn:notier:IORG-001:2020:2_85:CA:FATTURA | Sì
+6.1+^s| Fine sessione <InvioDocumento>/<Collegamento>
+6.1+^s| Inizio sessione <InvioDocumento>/<MetadatiBusdox>footnote:[l'elemento è obbligatorio se il tag _<InvioPeppol>_ è impostato a _true_.] [0..1]
+s| RecipientIdentifier | Identificativo BusDox del destinatario del documento | 256 caratteri max | Stringa | 9907:00000000001 | Sì
+s| SenderIdentifier | Identificativo BusDox del mittente del documento | 256 caratteri max | Stringa | 0201:test00 | Sì
+s| DocumentIdentifier | Identificativo BusDox del tipo documento | 1024 caratteri max | Stringa | footnote:[si veda l'appendice _A.10.Metadati Peppol_] | Sì
+s| ProcessIdentifier | Identificativo BusDox del processo in cui il documento è utilizzato | 1024 caratteri max | Stringa | footnote:[si veda l'appendice _A.10.Metadati Peppol_] | Sì
+6.1+^s| Fine sessione <InvioDocumento>/<MetadatiBusDox>
+6.1+^s| Fine sessione <InvioDocumento>
+|===
+
+=== Risposta
+
+NoTI-ER fornisce in risposta l’esito dell’operazione di invio, in formato XML. Questa riporta, in caso
+di esito positivo, la chiave univoca e l’URN assegnato al documento e, in caso di esito negativo, il
+codice d’errore con la relativa descrizione.
+
+==== URN
+
+L’URN è una stringa che identifica univocamente il documento ed è calcolata da NoTI-ER
+concatenando nel seguente modo i metadati forniti dal chiamante in fase di richiesta:
+
+
+*urn:notier:<MittenteNotier>:<Anno>:<Numero>:<TipoCiclo>:<TipoDocumento>*
+
+
+l’attributo _Tipo Ciclo_ può assumere i valori CA per il ciclo attivo (documenti di Outbuond) e CP per il
+ciclo passivo (documenti di Inbound).
+
+[CAUTION]
+====
+In accordo alle specifiche tecniche di NSO, la chiave di costruzione del URN per i [underline]#soli documenti
+di tipo Ordine BIS_3 e solo nel caso di ciclo passivo#, la stringa che viene composta è del tipo:
+
+*urn:notier:<MittenteNotier>:<DataDocumento>:<Numero>:<TipoCiclo>:<TipoDocumento>*
+
+dove DataDocumento è nel formato [aaaammgg].
+====
+
+===== Casi Particolari
+
+Eventuali caratteri speciali presenti nel numero del documento, che compone l’URN, vengono
+sostituiti con la stringa di caratteri derivata dalla relativa _Codifica Unicode_.
+Ad esempio, il carattere “/” viene sostituito con la stringa “_U002F_”.
+
+
+Nel caso di *notifica di esito committente*, il numero è concatenato al ID NoTI-ER dell’ufficio
+emittente della fattura, a cui la notifica è correlata. +
+Nel caso di *ordini e documenti di trasporto*, l’URN prevede un campo che identifichi la versione del
+documento:
+
+
+*urn:notier:<MittenteNotier>:<DataDocumento>:<Numero>:<TipoCiclo>:<TipoDocumento>:<NumeroVersione>*
+
+[CAUTION]
+====
+Con l’introduzione dell’interazione del sistema con NSO, non è più possibile inviare più volte un
+documento di tipo ordine con la stessa numerazione, in quanto lo stesso NSO non prevede il
+versionamento implicito degli ordini. +
+Con l’avvento del formato Peppol BIS 3.0, qualora fallisca l’invio dell’ordine verso rete Peppol
+oppure verso NSO, si rende necessaria la predisposizione dell’invio di un nuovo documento, che
+deve riportare il collegamento al documento precedente, al quale corrisponderà una nuova chiave
+logica. [underline]#In nessun caso è prevista la possibilità di versionamento del documento ordine BIS_3#.
+====
+
+==== Formato del file XML di risposta
+
+L’XML di risposta prodotto è descritto dal XSD “EsitoRisposta” versione 1.0. +
+Segue una descrizione dei campi dichiarati all’interno dello schema.
+
+[width="100%",cols="^,^,^,^,^,^">,options="header,footer"]
+|===
+|Tag XML | Descrizione | Vincoli | Tipo dato | Esempio | Obbl.
+6.1+^s| Inizio sessione <EsitoRichiesta> [1..1]
+s| Versione | Versione del XML del'esito risposta | 10 caratteri max | Stringa | 1.0 | Sì
+6.1+^s| Inizio sessione <EsitoRichiesta>/<Esito> [1..1]
+s| CodiceEsito | Esito della richiesta. Vale: +
+- OK, in caso di esito positivo; +
+- WARN, se il documento era già stato inviato, ma il tag _<AccettaChiaveDuplicata>_ in fase di chiamata è posto a true_ +
+- KO, in caso di esito negativo. | Valori ammessi: +
+- OK +
+- WARN +
+- KO | Tipo predefinito | OK | No
+s| CodiceErrore | Definisce il codice dell'erorefootnote:[per il significato e la descrizione dei codici d'errore si veda _4.3.Codici di errore_.] | CodiceEsito = KO | Tipo predefinito |  ERR-000-INVIODOC-RICHIESTANON-VALIDA | Sì
+s| DescrizioneErrore | Descrizione dell'errore | CodiceEsito = KO | Stringa | - | No
+6.1+^s| Fine sessione <EsitoRichiesta>/<Esito>
+6.1+^s| Inizio sessione <EsitoRichiesta>/<Documento> [1..1]
+s| Urn | Identificatore del documento NoTI-ER | 1024 caratteri max | Stringa | urn:notier:IORG-001:2020:2_85:CA:FATTURA | Sì
+s| DataRicezioneNotier | Data e ora assegnata da NoTI-ER al momento di ricezione del documento | - | Data | 2020-09-23T11:06:27.413+02:00 | Sì
+6.1+^s| Inizio sessione <EsitoRichiesta>/<Documento>/<Chiave> [1..1]
+s| Mittente | Codice identificativo del mittente del documento | 50 caratteri max | Stringa | sauslre01uff_efatturapa | Sì
+s| TipoMittente | Definisce la tipologia di codice presente nel campo Mittente | NOTIER | Tipo predefinito | NOTIER | Sì
+s| Anno | Anno del documento | 4 caratteri | Numerico | 2020 | Sì
+s| Numero | Numero del documento | 50 caratteri max | Stringa | 1234/op | Sì
+s| TipoDocumento | Tipologia del documento | Valori ammessi: +
+- FATTURA +
+- NOTA_DI_CREDITO +
+- ORDINE +
+- DOCUMENTO_DI_TRASPORTO +
+- NOTIFICA_DI_ESITO_COMMITTENTE  | Tipo predefinito | FATTURA | Sì
+6.1+^s| Fine sessione <EsitoRichiesta>/<Documento>/<Chiave>
+6.1+^s| Inizio sessione <EsitoRichiesta>/<Documento>/<Rappresentazione> [1..1]
+s| Formato | Formato del documento | valori ammessi: +
+- UBL +
+- SDI +
+- BIS_3  | Tipo predefinito | UBL | Sì
+s| Versione | Versione del formato del documento | 10 caratteri max | Stringa | 2.1 | Sì
+6.1+^s| Fine sessione <EsitoRichiesta>/<Documento>/<Rappresentazione>
+6.1+^s| Fine sessione <EsitoRichiesta>/<Documento>
+6.1+^s| Fine sessione <EsitoRichiesta>
+|===
+
+==== Codici di errore
+
+In caso di risposta con esito negativo (tag CodiceEsito = KO), NoTI-ER valorizza il tag _<CodiceErrore>_
+con uno dei valori definiti nel XSD “EsitoRichiesta v1.1”, di cui segue la descrizione.
+
+[width="100%",cols="^,^">,options="header,footer"]
+|===
+| Codice | Descrizione
+| ERR-000-GENERICO | Codice d'errore generico. Indica che NoTI-ER non è riuscito ad elaborare la richiesta
+a causa di un errore generico. Rientrano in questa categoria gli errori causati, ad
+esempio, dalla non disponibilità del database o da problemi di natura sistemistica. *Il
+client deve considerare la richiesta come non processata e provvedere a reinoltrarla*.
+Ulteriori dettagli dell’errore saranno comunque riportati nel tag
+_<EsitoRichiesta>/<Esito><DescrizioneErrore>_.
+| ERR-000-INVIODOC-RICHIESTANON-VALIDA | Indica che la richiesta non è valida. La causa dell’errore verrà dettagliata nel tag
+_<EsitoRichiesta>/<Esito><DescrizioneErrore>_ e dipende, generalmente, dalla
+mancanza del file di Metadati e/o del Documento all’atto dell’invio.
+| ERR-001-INVIODOC-XML-NONVALIDO | Indica che l'XML dei metadati non è valido. +
+L'errore si ottiene al verificarsi di in una delle seguenti condizioni: +
+- l'XML non è valido rispetto l'XSD di InvioDocumento nella versione
+specificata; +
+- l'XML definisce il valore del tag _<InvioDocumento>/<Versione>_ diverso
+rispetto alla versione dichiarata nell'URL di chiamata; +
+- l'XML definisce entrambi i tag
+_<InvioDocumento>/<Configurazione>/<InvioSdi>_ e
+_<InvioDocumento>/<Configurazione>/<InvioPeppol>_ valorizzati a true; +
+- l'XML definisce i tag _<InvioDocumento>/<Configurazione>/<InvioSdi>_,
+_<InvioDocumento>/<Configurazione>/<InvioPeppol>_ e _<InvioDocumento>/<Configurazione>/<InvioConservazione>_ tutti
+valorizzati a false; +
+- l’XML valorizza i tag _<InvioDocumento>/<Configurazione>/<InvioPeppol>_ a
+true, ma non è presente il tag _<InvioDocumento>/<MetadatiPeppol>_
+necessario per il corretto instradamento del documento su rete BusDox; +
+- Il tipo di Documento specificato è una _fattura_ o una _nota di credito_, ma
+non è presente il tag contenente l’informazione del registro
+_<InvioDocumento>/<Integrazione>_ necessario per effettuare
+correttamente l’integrazione ai fini di conservazione in Parer; +
+- Il tipo di Documento dichiarato all’interno del tag
+_<InvioDocumento>/<Documento>/<Chiave>/<TipoDocumento>_, non è
+presente nel sistema.
+| ERR-INVIODOC-002-NONAUTORIZZATO | Indica che il chiamante, identificato tramite il Common Name del certificato X.509
+non è autorizzato a richiamare il servizio oppure non è autorizzato all'invio del
+documento della tipologia specificata nel tag
+_<InvioDocumento>/<Documento>/<Chiave>/<TipoDocumento>_.
+| ERR-INVIODOC-003-ORG-NONVALIDA | Indica che l'organizzazione, dichiarata all'interno dei tag
+_<InvioDocumento>/<Documento>/<Chiave>/<Mittente>_ e
+_<InvioDocumento>/<Documento>/<Chiave>/<TipoMittente>_, non è presente nel
+sistema.
+| ERR-INVIODOC-004-TIPODOCNON-VALIDO | Indica che il tipo documento, dichiarato nei metadati all’interno del tag
+_<InvioDocumento>/<Documento>/<Chiave>/<TipoDocumento>_ non è valido.
+| ERR-INVIODOC-005-FORMATORAPPR-NON-VALIDO | Indica che il formato di rappresentazione, dichiarato all'interno del tag
+_<InvioDocumento>/<Documento>/<Rappresentazione>/<Formato>_, non è presente
+nel sistema.
+| ERR-INVIODOC-006-VERSIONERAPPR-NON-VALIDA | Indica che la versione di rappresentazione, dichiarata all'interno del tag
+_<InvioDocumento>/<Documento>/<Rappresentazione>/<Versione>_, non è presente
+nel sistema.
+| ERR-INVIODOC-007-DOC-NONVALIDO-XSD | Indica che il documento da inviare non è valido rispetto l'XSD a cui è associato.
+| ERR-INVIODOC-008-DOC-NONVALIDO-SCHEMATRON | Indica che il documento da inviare non è valido rispetto allo Schematron a cui è associato.
+| ERR-INVIODOC-009-DOCDUPLICATO | Indica che il documento inviato è già stato ricevuto in un'altra chiamata da NoTIER.
+Questo errore si verifica quando fallisce in sequenza uno dei seguenti controlli, in
+ordine: +
+- Il file xml relativo al Documento è già stato inviato in precedenza a NoTIERfootnote:[ad ogni invio NoTI-ER esegue una *verifica sull’ Hash MD5* del file xml del documento, confrontandola con quelle dei
+documenti già ricevuti in precedenza.]. +
+- Il valore del flag _<AccettaChiaveDuplicata>_ è impostato a false. +
+- Il Documento non è in uno stato compatibile con la sovrascritturafootnote:[*solo relativamente a fattura e nota di credito*, che sono associate ad uno Stato di Esito.]. +
+- Il Documento è stato precedentemente scartato da SdI con motivazione “file duplicato” o “nome file duplicato”.
+| ERR-INVIODOC-010-DIMENSIONI-ECCESSIVE | Indica che il documento che si sta cercando di inviare supera le dimensioni massime
+stabilite. Per i documenti inviati verso SdI e verso NSO il limite massimo consentito è
+fissato a 5 MB.
+||
+|===

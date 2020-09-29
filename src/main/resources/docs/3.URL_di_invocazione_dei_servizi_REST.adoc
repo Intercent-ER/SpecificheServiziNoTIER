@@ -1,0 +1,6 @@
+== URL di invocazione dei servizi REST
+(((3. URL di invocazione dei servizi REST)))
+
+L’URL di base dei servizi REST esposti è:
+
+[blue]#https://# [red]#<host-NoTIER>:<porta-NoTIER># [blue]#/notier/rest/v1.0/documenti/#

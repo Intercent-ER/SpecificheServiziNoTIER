@@ -1,0 +1,22 @@
+= NoTI-ER - Specifiche tecniche dei servizi
+
+:Autore: Intercent-ER
+:doctype: book
+:encoding: utf-8
+:lang: it
+:toc: left
+:toclevels: 2
+:numbered:
+
+[blue]#Autore: Intercent-ER# +
+[blue]#Ultimo aggiornamento: 22/09/2020#
+
+include::1.Premessa.adoc[]
+
+include::2.Note_Generali.adoc[]
+
+include::3.URL_di_invocazione_dei_servizi_REST.adoc[]
+
+include::4.Servizio_di_invio_documento.adoc[]
+
+include::5.Servizio_di_recupero_lista_documenti.adoc[]
