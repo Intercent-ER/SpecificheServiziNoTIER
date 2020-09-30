@@ -1,2 +1,173 @@
 == Servizio di recupero lista documenti
 (((5. servizio di recupero lista documenti)))
+
+Il servizio di recupero lista documenti consente al chiamante di ottenere la lista dei documenti di propria competenza, ossia di cui è *destinatario*. +
+
+=== URL di invocazione
+
+L’URL per invocare il servizio di _recupero lista documenti_ è composto come segue:
+
+GET [blue]#https://# [red]#<host-NoTIER>:<porta-NoTIER># [blue]#/notier/rest/v1.0/documenti/recupero#
+
+=== Richiesta
+
+La Request deve essere una *GET HTTP* verso l’indirizzo specificato al paragrafo precedente. +
+Il servizio di recupero lista consente di effettuare il recupero anche previa specifica di alcuni parametri di filtro. In tabella sottostante se ne riporta la descrizione.
+
+[width="100%",cols=",,^">,options="header,footer"]
+|===
+^| Filtro ^| Descrizione | Obbl.
+^| idnotier | Codice identificativo NoTI-ER del destinatario dei documenti.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=org-002_ | No
+^| tipodoc | Restituisce la lista di tutti i documenti destinati al chiamante, aventi la tipologia specificata.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?tipodoc=fattura_ | No
+^| stato_giacenza | Restituisce la lista di tutti i documenti destinati al chiamante, aventi lo stato giacenza specificato.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?stato_giacenza=da_recapitare_ | No
+^| stato_conservazione | Restituisce la lista di tutti i documenti destinati al chiamante con lo stato di conservazione specificato.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?stato_conservazione=da_versare_ | No
+^| data_inizio | Parametro utilizzato per abilitare il filtraggio per *data di ricezione NoTI-ER* della lista di documenti, indica la data di inizio. +
+La data va specificata nel formato GGMMAAAA.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?data_inizio=01052020_ | No
+^| data_fine | Parametro utilizzato per abilitare il filtraggio per *data di ricezione NoTI-ER* della lista di documenti, indica la data di fine. +
+La data va specificata nel formato GGMMAAAA.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?data_fine=01082020_ | No
+^| ordinamento | Parametro utilizzato per richiedere uno specifico ordinamento della Lista dei documenti restituita:
+
+- desc: dal più recente al più datato; +
+- asc: dal più datato al più recente. +
+
+In mancanza del parametro di filtro, la lista restituita viene ordinata con una logica discendente, restituendo i documenti dal più recente al più datato (DESC utilizzato in maniera standard).
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?ordinamento=asc_ | No
+^| inizio | Parametro utilizzato per abilitare la paginazione della lista di documenti, indica l’indice da cui iniziare la paginazionefootnote:[per convenzione, l'indice del primo documento è 0.].
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?inizio=1&offset=100_ | No
+^| offset | Parametro utilizzato per abilitare la paginazione della lista di documenti, indica il numero di documenti da restituire a partire dal valore del parametro “inizio”.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?inizio=1&offset=100_ | No
+
+|||
+|===
+
+[CAUTION]
+====
+La richiesta con parametri, come mostrato in tabella nella colonna _descrizione_, va effettuata invocando l’URL specificato al paragrafo 5.1, a cui si aggiungono i parametri desiderati nella forma _chiave=valore_, preceduti dal carattere “?” e separati dal carattere “&”. +
+Il servizio restituisce un massimo di *500* documenti, coerentemente con i filtri adottati. +
+In aggiunta a questo, viene restituita anche l’informazione _<TotaleDocumentiScaricabili>_, che informa sul totale dei documenti corrispondenti ai parametri di filtro inseritifootnote:[nel caso in cui il totale documenti scaricabili sia superiore a 500, si renderà necessario effettuare più chiamate per ricevere il totale dei documenti di interesse.]. +
+Inoltre, in mancanza della valorizzazione dei parametri di filtro _data_inizio_ e _data_fine_, viene restituita una lista con il riferimento standard agli *ultimi 30 giorni* dal momento della chiamata e, in mancanza della valorizzazione del parametro _ordinamento_, la lista viene restituita ordinata di default per data di ricezione decrescente.
+====
+
+=== Risposta
+
+Se l’esito della ricerca è positivo, NoTI-ER risponde con l’elenco dei documenti che corrispondono ai filtri inseriti, altrimenti viene visualizzato un codice d’errore con relativa descrizione.
+
+==== Formato del file XML di risposta
+
+L’XML di risposta prodotto da NoTI-ER è descritto dal XSD “EsitoRichiesta v1.1”. +
+Segue una descrizione dei campi dichiarati all’interno dello schema.
+
+[width="100%",cols="^,^,^,^,^,^">,options="header,footer"]
+|===
+|Tag XML | Descrizione | Vincoli | Tipo dato | Esempio | Obbl.
+6.1+^s| Inizio sessione <EsitoRichiesta> [1..1]
+s| Versione | Versione del XML di esito risposta | 10 caratteri max | Stringa | 1.0 | Sì
+6.1+^s| Inizio sessione <EsitoRichiesta>/<Esito> [1..1]
+s| CodiceEsito | Esito della richiesta. Vale OK in caso di esito positivo, KO in caso di esito negativo. | Valori ammessi: +
+- OK +
+- KO | Tipo predefinito | OK | Sì
+s| CodiceErrore | Definisce il codice dell'errorefootnote:[per il significato dei codici di errore e relativa descrizione, si veda il paragrafo 5.3.2.] | Presente se CodiceEsito = KO |  Tipo predefinito | | No
+s| DescrizioneErrore | Descrizionde dell'errore | Presente se CodiceEsito = KO | Stringa | | No
+6.1+^s| Fine sessione <EsitoRichiesta>/<Esito>
+6.1+^s| Inizio sessione <EsitoRichiesta>/<ListaDocumenti> [1..1]
+s| TotaleDocumentiScaricabili | Numero di documenti totali disponibili, in rispetto ai filtri impostati nella _Request_ | numero intero di 4 cifre | numero | 650 | Sì
+s| NumeroDocumenti | Numero di documenti presenti nella lista. +
+Determina il numero di tag _<Esitorichiesta>/<ListaDocumenti>/<Documenti>/<Documento>_ presenti nella risposta | numero intero di 4 cifre | numero | 500 | Sì
+s| DataInizio | Data e ora di inizio recupero lista per i documenti |  | data e ora | 2020-04-08T00:00:00.000+02:00 | Sì
+s| DataInizio | Data e ora di fine recupero lista per i documenti |  | data e ora | 2020-04-08T00:00:02.000+02:00 | Sì
+6.1+^s| Inizio sessione <EsitoRichiesta>/<ListaDocumenti>/<Documenti>footnote:[la sezione non è presente quando il tag _<NumeroDocumenti>_ è uguale a 0.] [0..1]
+6.1+^s| Inizio sessione <EsitoRichiesta>/<ListaDocumenti>/<Documenti>/<Documento>footnote:[sono presenti tante sezioni quanti sono i documenti definiti nel tag _<NumeroDocumenti>_.] [1..N]
+s| Destinatario | Codice NoTI-ER identificativo del documento. | 50 caratteri max | Stringa | ORG-001 | Sì
+s| Urn | identificatore del documento in NoTI-ER. | 1024 caratteri max |	Stringa	 | urn:notier:IORG-001:2014:2_85:FATTURA |	Sì
+s| DataRicezioneNotier	| Data e ora assegnata da NoTI-ER al momento della ricezione del documentofootnote:[nel caso di documento con _chiave duplicata_, il servizio di recupero restituisce solo l’ultima versione e pertanto la data di ricezione è quella relativa all’ultima versione dello stesso.].	|	| Data	| 2020-04-08T11:04:04.000+02:00	| Sì
+s| UrnCollegato |	Identificatore del documento correlato.
+
+Ad esempio, nel caso di una notifica di consegna si avrà l’URN della fattura a cui si riferisce.	| 1024 caratteri max	| Stringa	| urn:notier:IORG-001:2014:2_85:FATTURA	| NO
+s| StatoGiacenza	| Stato in cui si trova la sessione di ricezione del documento.	| Valori ammessi: +
+- DA_RECAPITARE +
+- RECAPITATO +
+- IN_LAVORAZIONE |	Tipo predefinito	| RECAPITATO | NO
+s| Statoconservazione | Stato in cui si trova la sessione di invio in conservazione. | Valori ammessi: +
+- IN_ATTESA_DATI_FISCALI +
+- DA_INVIARE +
+- INVIATO_OK +
+- INVIATO_KO +
+- DA_ANNULLARE +
+- ANNULLATO +
+- NON_ANNULLABILE | Tipo predefinito | DA_INVIARE | No
+6.1+^s| Inizio sessione <EsitoRichiesta>/<ListaDocumenti>/<Documenti>/<Documento>/<Chiave> [1..1]
+s| Mittente |	Codice identificativo del mittente del documento. |	50 caratteri max	| Stringa	| SOGG-001 | Sì
+s| TipoMittente	| Definisce la tipologia di codice presente nel campo “Mittente”.	| Valori ammessi: +
+- NOTIER	| Tipo predefinito	| NOTIER | Sì
+s| Anno |	Anno del documento. |	4 caratteri |	Numero |	2020 | Sì
+s| Numero	| Numero del documento.	| 50 caratteri max.	| Stringa	| 1/8000ABC | Sì
+s| TipoDocumento | Tipologia di documento. |	Valori ammessi: +
+- FATTURA +
+- NOTA_DI_CREDITO +
+- DOCUMENTO_DI_TRASPORTO +
+- ORDINE +
+- NOTIFICA_MDN +
+- NOTIFICA_DI_SCARTO +
+- RICEVUTA_DI_CONSEGNA +
+- NOTIFICA_DI_MANCATA_CONSEGNA +
+- NOTIFICA_DI_ESITO_COMMITTENTE +
+- NOTIFICA_DI_ESITO_CEDENTE +
+- NOTIFICA_SCARTO_ESITO_COMMITTENTE +
+- NOTIFICA_DI_DECORRENZA_TERMINI +
+- ATTESTAZIONE_DI_FILE_NON_RECAPITABILE +
+- NOTIFICA_METADATI_FILE_FATTURA +
+- ESITO_CONSERVAZIONEfootnote:[l’esito di versamento viene reso disponibile così come è restituito da ParER all’atto del versamento di un documento principale. Tale documento è quindi conforme allo schema ParER _WSResponseVersamento.xsd._] |	Tipo predefinito |	FATTURA | Sì
+6.1+^s| Fine sessione <EsitoRichiesta>/<ListaDocumenti>/<Documenti>/<Documento>/<Chiave>
+6.1+^s| Inizio sessione <EsitoRichiesta>/<ListaDocumenti>/<Documenti>/<Documento>/<Rappresentazione> [1..1]
+s| Formato | Formato del documento. | Valori ammessi: +
+- UBL +
+- SDI +
+- PARER +
+- UBL_EU +
+- NSO | Tipo predefinito | BIS_3 | Sì
+s| Versione	| Versione del formato del documento	| 10 caratteri max	| Stringa	| 1.0	| Sì
+6.1+^s| Fine sessione <EsitoRichiesta>/<ListaDocumenti>/<Documenti>/<Documento>/<Rappresentazione>
+6.1+^s| Fine sessione <EsitoRichiesta>/<ListaDocumenti>/<Documenti>/<Documento>
+6.1+^s| Fine sessione <EsitoRichiesta>/<ListaDocumenti>/<Documenti>
+6.1+^s| Fine sessione <EsitoRichiesta>/<ListaDocumenti>
+6.1+^s| Fine sessione <EsitoRichiesta>
+|===
+
+==== Codici di errore
+
+In caso di risposta con esito negativo (_<CodiceEsito>KO</CodiceEsito>_), NoTI-ER valorizza il tag _<CodiceErrore>_ con uno dei valori definiti nello stesso XSD di risposta.
+
+[width="100%",cols=",">,options="header,footer"]
+|===
+^| Codice ^| Errore
+| ERR-000-GENERICO	| Codice d'errore generico. Indica che NoTI-ER non è riuscito ad elaborare la richiesta a causa di un errore generici. Rientrano in questa categoria gli errori causati, ad esempio, dalla non disponibilità del database o problemi di natura sistemistica. +
+Il client deve considerare la richiesta come non processata e provvedere a re inoltrarla. +
+Ulteriori dettagli dell’errore saranno comunque riportati nel tag _<EsitoRichiesta>/<Esito><DescrizioneErrore>_.
+| ERR-RECDOC-000-RICHIESTA-NON-VALIDA	| Indica che la richiesta non è valida. La causa dell’errore verrà dettagliata nel tag _<EsitoRichiesta>/<Esito><DescrizioneErrore>_ e dipende, generalmente, dal nome dei parametri errato o da valori non congruenti (valori di paginazione o date di inizio e fine invertite, etc.)
+| ERR-RECDOC-001-NON-AUTORIZZATO	| Indica che il chiamante, identificato tramite il _common name del certificato X.509_ non è autorizzato a richiamare il servizio.
+||
+|===

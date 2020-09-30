@@ -41,7 +41,7 @@ s| Ordine | BIS_3 | 2.1
 
 === URL di invocazione
 
-L’URL per invocare il servizio di invio documento è composto come segue:
+L’URL per invocare il servizio di _invio documento_ è composto come segue:
 
 POST [blue]#https://# [red]#<host-NoTIER>:<porta-NoTIER># [blue]#/notier/rest/v1.0/documenti/invio#
 

@@ -1,0 +1,103 @@
+== Servizio di Lookup Participant ID
+(((9. Servizio di Lookup Participant ID)))
+
+Questo servizio permette al chiamante di verificare lo stato attuale di uno specifico _participant ID Peppol_. +
+Inserendo come parametro di input un participant ID, NoTI-ER si fa carico di effettuare la Lookup su SML in relazione all’identificativo inserito, restituendo in output il risultato della ricerca in formato _Json_ o _XML_.
+
+=== URL di invocazione
+
+L’URL per invocare il servizio di _lookup participant ID_ è composto come segue:
+
+GET [blue]#https://# [red]#<host-NoTIER>:<porta-NoTIER># [blue]#/notier/rest/v1.0/lookup#
+
+=== Richiesta
+
+La _Request_ deve essere una *GET HTTP* verso l’indirizzo specificato al paragrafo precedente. +
+Il servizio di Lookup consente di ricevere in output un formato Json o un formato XML. +
+Rispettivamente, la chiamata deve essere effettuata come segue:
+
+*	*JSON*: https:// <contesto-notier>:8443 /notier/rest/v1.0/lookup/json/{participant id}
+*	*XML*: https:// <contesto-notier>:8443 /notier/rest/v1.0/lookup/xml/{participant id}
+
+Il parametro {participant id} fa riferimento al Participant Peppol di cui si vuole effettuare la lookup. +
+Es. GET _https:// <contesto-notier>:8443 /notier/rest/v1.0/lookup/json/9907:123456789)_
+
+=== Risposta
+
+NoTI-ER risponde inviando in output le informazioni inerenti al participant Peppol di cui si è effettuata la lookup, in rispetto al formato richiesto - _application/json_ o _application/xml_.
+
+==== Formato del file Json di risposta
+
+L'_application/json_ di risposta riporta la seguente struttura.
+
+[width="100%",cols="^,^,^,^,^,^">,options="header,footer"]
+|===
+|Tag | Descrizione | Vincoli | Tipo dato | Esempio | Obbl.
+s| esito |	esito della richiesta |	true, false	| Boolean	| true |	Sì
+s| errorMessage |	descrizione del messaggio d’errore | esito is false |	String |	Identifier 'iso6523-actorid-upis::0201:testrr' is not registered in SML	| No
+s| ParticipantIdentifier	| Participant Peppol ID	| |String	| 0201:testap	| Sì
+6.1+^s|metadata (1..N)
+6.1+^s|metadata/processi (1..N)
+6.1+^s|metadata/processi/endpoint (1..N)
+s| adress |	informazioni sull’indirizzo dell’endpoint	|	| String	| https:// test-notier.regione.emilia-romagna.it/oxalis/as2 |	Sì
+s| ServiceActivationDate	| informazioni aggiuntive sulla data di attivazione |	|	Date	| | No
+s| ServiceExpirationDate	| informazioni aggiuntive sulla data di scadenza	| |	Date |	|	No
+s| Certificate |	certificato utilizzato | |		String	| ----BEGIN CERTIFICATE---- (…)	| Sì
+s| serviceDescription |	informazioni aggiuntive sul servizio | |	String	| Access Point NoTI-ER | Sì
+s| technicalContactUrl	| URL per technical contact |	|	String	| https:// intercenter.regione.emilia-romagna.it/ noti-er-fatturazione-elettronica	| Sì
+s| technicalInformationUrl | URL per technical information | |	String	| https:// intercenter.regione.emilia-romagna.it/ noti-er-fatturazione-elettronica	| No
+s| TransportProfile	| Transport Profile utilizzato |	|	String |	busdox-transport-as2-ver1p0	| Sì
+6.1+^s| fine metadata/processi/endpoint
+s| schema	| Schema dell’identificatore del processo	| |	String	| cenbii-procid-ubl |	Sì
+s| value	| Valore dell’identificatore del processo | |	String	| urn:www.cenbii.eu:profile:bii05:ver2.0	| Sì
+6.1+^s| fine metadata/processi
+6.1+^s| metadata/participantIdentifier (1..1)
+s| schema	| Schema dell’identificatore del Participant ID	| |	String	| iso6523-actorid-upis	| Sì
+s| value	| Valore dell’identificatore del Participant ID	| |	String	| 0201:testap	| Sì
+6.1+^s| Fine metadata/participantIdentifier
+6.1+^s| metadata/documentIdentifier (1..1)
+s|schema	| Schema dell’identificatore del document identifier	| |	String	| busdox-docid-qns	| Sì
+s|value	| Valore dell’identificatore del document identifier	| |	String	| urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2:: CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn: www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0::2.1	| Sì
+s|Name	| Nome del Tipo Documento | |	String	| Nota di Credito Peppol BIS 2.1 |	No
+6.1+^s| Fine metadata/documentIdentifier
+6.1+^s| Fine metadata
+|===
+
+==== Formato del file XML di risposta
+
+L'_application/xml_ di risposta riporta la seguente struttura.
+
+[width="100%",cols="^,^,^,^,^,^">,options="header,footer"]
+|===
+|Tag XML | Descrizione | Vincoli | Tipo dato | Esempio | Obbl.
+6.1+^s| Inizio sessione <LookupResponse> [1..1]
+s| esito |	esito della richiesta |	true, false	| Boolean	| true |	Sì
+s| errorMessage |	descrizione del messaggio d’errore | esito is false |	String |	Identifier 'iso6523-actorid-upis::0201:testrr' is not registered in SML	| No
+s| ParticipantIdentifier	| Participant Peppol ID	| |String	| 0201:testap	| Sì
+6.1+^s| Inizio sessione <LookupResponse>/<Metadata> [1..N]
+6.1+^s| Inizio sessione <LookupResponse>/<Metadata>/<Processi> [1..N]
+s| schema	| Schema dell’identificatore del processo. | |	Stringa	| cenbii-procid-ubl |	Sì
+s| value	| Valore dell’identificatore del processo.	| |	Stringa	| urn:www.cenbii.eu:profile:bii05:ver2.0	| Sì
+6.1+^s| Inizio sessione <LookupResponse>/<Metadata>/<Processi>/<Endpoint> [1..N]
+s| adress |	informazioni sull’indirizzo dell’endpoint	|	| String	| https:// test-notier.regione.emilia-romagna.it/oxalis/as2 |	Sì
+s| ServiceActivationDate	| informazioni aggiuntive sulla data di attivazione |	|	Date	| | No
+s| ServiceExpirationDate	| informazioni aggiuntive sulla data di scadenza	| |	Date |	|	No
+s| Certificate |	certificato utilizzato | |		String	| ----BEGIN CERTIFICATE---- (…)	| Sì
+s| serviceDescription |	informazioni aggiuntive sul servizio | |	String	| Access Point NoTI-ER | Sì
+s| technicalContactUrl	| URL per technical contact |	|	String	| https:// intercenter.regione.emilia-romagna.it/noti-er-fatturazione-elettronica	| Sì
+s| technicalInformationUrl | URL per technical information | |	String	| https:// intercenter.regione.emilia-romagna.it/noti-er-fatturazione-elettronica	| No
+s| TransportProfile	| Transport Profile utilizzato |	|	String |	busdox-transport-as2-ver1p0	| Sì
+6.1+^s| Fine sessione <LookupResponse>/<Metadata>/<Processi>/<Endpoint>
+6.1+^s| Fine sessione <LookupResponse>/<Metadata>/<Processi>
+6.1+^s| Inizio sessione <LookupResponse>/<Metadata>/<ParticipantIdentifier> [1..1]
+s| schema	| Schema dell’identificatore del Participant ID	| |	String	| iso6523-actorid-upis	| Sì
+s| value	| Valore dell’identificatore del Participant ID	| |	String	| 0201:testap	| Sì
+6.1+^s| Fine sessione <LookupResponse>/<Metadata>/<ParticipantIdentifier>
+6.1+^s| Inizio sessione <LookupResponse>/<Metadata>/<DocumentIdentifier> [1..1]
+s|schema	| Schema dell’identificatore del document identifier	| |	String	| busdox-docid-qns	| Sì
+s|value	| Valore dell’identificatore del document identifier	| |	String	| urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2:: CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn: www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0::2.1	| Sì
+s|Name	| Nome del Tipo Documento | |	String	| Nota di Credito Peppol BIS 2.1 |	No
+6.1+^s| Fine sessione <LookupResponse>/<Metadata>/<DocumentIdentifier>
+6.1+^s| Fine sessione <LookupResponse>/<Metadata>
+6.1+^s| Fine sessione <LookupResponse>
+|===

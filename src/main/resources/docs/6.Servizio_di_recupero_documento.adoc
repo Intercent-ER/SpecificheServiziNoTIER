@@ -1,0 +1,60 @@
+== Servizio di recupero documento
+(((6. servizio di recupero documento)))
+
+Il servizio di recupero documento consente al chiamante di recuperare i documenti di propria competenza, corrispondenti ad un dichiarato URN.
+
+=== URL di invocazione
+
+L’URL per invocare il servizio di _recupero documento_ è composto come segue:
+
+GET [blue]#https://# [red]#<host-NoTIER>:<porta-NoTIER># [blue]#/notier/rest/v1.0/documenti/recupero/{urn_documento}#
+
+=== Richiesta
+
+La Request deve essere una *GET HTTP* verso l’indirizzo specificato al paragrafo precedente. +
+Contestualmente, il chiamante deve sostituire la stringa _{urn_documento}_ con l’URN del documento che intende scaricare, ricavabile facilmente dalla lista documenti di cui al capitolo precedente.
+
+[CAUTION]
+====
+È altamente sconsigliato cercare di dedurre l’URN del documento con una qualsiasi logica che non sia quella di utilizzo del servizio di recupero lista documenti. +
+Ad esempio, ricavare l’URN della _notifica del file matadati_ di una determinata fattura sostituendo la stringa _FATTURA_ con _NOTIFICA_METADATI_FILE_FATTURA_, non è una pratica vincente, in quanto la logica di creazione dell’URN dei vari documenti potrebbe variare nel tempo in base a nuove esigenze di business.
+====
+
+=== Risposta
+
+Se la procedura viene effettuata correttamente, NoTI-ER risponde restituendo il documento richiesto in formato XML.
+Altrimenti, se non esiste un documento avente l’URN dichiarato, se il client non è autorizzato al recupero del documento stesso o se, in generale, NoTI-ER non è in grado di risalire al documento, verrà fornito un codice HTTP 404 con un XML contenente i dettagli dell’errore.
+
+==== Formato del file XML di risposta
+
+L’XML di risposta prodotto in caso di [underline]#esito negativo# è descritto dal XSD “Esito Richiesta v.1.1”.	 +
+Segue una descrizione dei campi dichiarati all’interno dello schema.
+
+[width="100%",cols="^,^,^,^,^,^">,options="header,footer"]
+|===
+|Tag XML | Descrizione | Vincoli | Tipo dato | Esempio | Obbl.
+6.1+^s| Inizio sessione <EsitoRichiesta> [1..1]
+s| Versione | Versione del XML di esito risposta | 10 caratteri max | Stringa | 1.0 | Sì
+6.1+^s| Inizio sessione <EsitoRichiesta>/<Esito> [1..1]
+s| CodiceEsito | Esito della richiesta. Vale OK in caso di esito positivo, KO in caso di esito negativo. | Valori ammessi: +
+- KO | Tipo predefinito | KO | Sì
+s| CodiceErrore | Definisce il codice dell'errorefootnote:[per la panoramica dei codici di errore e relativa descrizione, si veda il paragrafo 6.3.2.] | CodiceEsito = KO |  Tipo predefinito | | Sì
+s| DescrizioneErrore | Descrizionde dell'errore | CodiceEsito = KO | Stringa | | Sì
+6.1+^s| Fine sessione <EsitoRichiesta>/<Esito>
+6.1+^s| Fine sessione <EsitoRichiesta>
+|===
+
+==== Codici di errore
+
+I codici di errore per il servizio di _recupero documento_ sono mappati come in tabella seguente.
+
+[width="100%",cols=",">,options="header,footer"]
+|===
+^| Codice ^| Errore
+| ERR-000-GENERICO	| Codice d'errore generico. Indica che NoTI-ER non è riuscito ad elaborare la richiesta a causa di un errore generico interno. Rientrano in questa categoria gli errori causati ad esempio dalla non disponibilità del database o problemi di natura sistemistica. +
+Il client deve considerare la richiesta come non processata e provvedere a re inoltrarla. +
+Ulteriori dettagli dell’errore saranno comunque riportati nel tag _<EsitoRichiesta>/<Esito><DescrizioneErrore>_.
+| ERR-RECDOC-001-NON-AUTORIZZATO	| Indica che il chiamante, identificato tramite il _common name del certificato X.509_ non è autorizzato a richiamare il servizio, oppure che l’URN specificato non è di competenza del chiamante.
+| ERR-RECDOC-002-NON-TROVATO |	Indica che non esiste alcun documento in NoTI-ER corrispondente all’URN specificato.
+||
+|===

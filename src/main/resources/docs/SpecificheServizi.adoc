@@ -20,3 +20,13 @@ include::3.URL_di_invocazione_dei_servizi_REST.adoc[]
 include::4.Servizio_di_invio_documento.adoc[]
 
 include::5.Servizio_di_recupero_lista_documenti.adoc[]
+
+include::6.Servizio_di_recupero_documento.adoc[]
+
+include::7.Integrazione_dei_dati_fiscali.adoc[]
+
+include::8.Interrogazione_Peppol_Directory.adoc[]
+
+include::9.Servizio_di_Lookup_Participant_ID.adoc[]
+
+include::10.Servizio_di_monitoraggio.adoc[]

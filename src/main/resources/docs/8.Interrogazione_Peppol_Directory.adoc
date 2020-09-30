@@ -1,0 +1,79 @@
+== Interrogazione Peppol Directory
+(((7. Interrogazione Peppol Directory)))
+
+Il servizio di _Integrazione Peppol Directory_ consente al chiamante di effettuare una ricerca sulla _Peppol Directory_, sfruttando il sistema NoTI-ER come _proxy_. +
+Tale modalità è preferibile rispetto ad una interrogazione diretta della API della Peppol Directory, in quanto consente al sistema chiamante di evitare di aggiornare i propri servizi ad ogni eventuale modifica dell’interfaccia della stessa, demandando l’attività a NoTI-ER.
+
+=== URL di invocazione
+
+L’URL per invocare il servizio di _interrogazione Peppol Directory_ è composto come segue:
+
+GET [blue]#https://# [red]#<host-NoTIER>:<porta-NoTIER># [blue]#/notier/rest/v1.0/PD/search#
+
+=== Richiesta
+
+La Request deve essere una *GET HTTP* all’indirizzo riportato al paragrafo precedente. +
+A tale stringa, è necessario aggiungere uno dei seguenti parametri, che rappresentano diverse modalità di ricerca sulla Peppol Directory:
+
+*	*all*={ricerca}: ricerca su qualsiasi campo della _business card_ il valore inserito. La ricerca avverrà su tutti i campi e restituirà anche match parziali. +
+Es: _GET https://<host-NoTIER>:<porta-NoTIER>/notier/rest/v1.0/PD/search/all=farmacia_
+
+*	*peppolid*={peppol_id}: ricerca uno specifico _participant identifier_. La ricerca avverrà soltanto sul campo “participant identifier” della business card e restituirà esclusivamente match esatti. +
+Es: _GET https://<host-NoTIER>:<porta-NoTIER>/notier/rest/v1.0/PD/search/peppolid=0210:testap_
+
+*	*identificatoreschema*={schema} *&identificatorevalore*={valore}: ricerca i soggetti tramite la coppia schema/valorefootnote:[per un elenco degli schema utilizzati da Peppol si può consultare la documentazione disponibile a https://peppol.eu/wp-content/uploads/2017/12/PEPPOL_Policy-for-use-of-identifiers-300-11_certificates.pdf.]. +
+Es:  _GET https://<host-NoTIER>:<porta-NoTIER>/notier/rest/v1.0/PD/search/identificatoreschema=cenbii-procid-ubl&identificatorevalore=urn:fdc:peppol.eu:poacc:bis:order_only:3_
+
+In tutti e tre i casi è possibile specificare i parametri opzionali di *start* (indice del primo record da visualizzare) e *count* (numero di record da visualizzare), i quali permettono di ricevere i risultati in un elenco paginato. +
+Es: _GET https://<host-NoTIER>:<porta-NoTIER>/notier/rest/v1.0/PD/search/all=farmacia&start=1&count=8_
+
+=== Risposta
+
+NoTI-ER risponde con un *Json* contenente l’elenco delle business card presenti su Peppol Directory che rispecchiano i parametri inseriti. +
+Il formato del son di risposta rispecchia le caratteristiche riportate nella tabella sottostante.
+
+==== Formato del file Json di risposta
+
+[width="100%",cols="^,^,^,^,^,^">,options="header,footer"]
+|===
+|Tag | Descrizione | Vincoli | Tipo dato | Esempio | Obbl.
+s| version	|Versione del Json di risposta	| |	Stringa	| 1.0 | 	Sì
+s| total-result-count	|Numero totale di record	| |	Numero	| 94	| Sì
+s| used-result-count | Numero di record visualizzati	| | 	Numero |	50	| Sì
+s| result-page-index | Numero della pagina visualizzata	| |	Numero	| 0	| Sì
+s| result-page-count | Numero di record per pagina	| | 	Numero |	50	| Sì
+s| first-result-index	| Indice del primo record visualizzato	| |	Numero |	0	| Sì
+s| last-result-index	| Indice dell’ultimo record visualizzato	| |	Numero |	49	| Sì
+s| query-terms	| Stringa di ricerca utilizzata su Peppol Directory		| |String	| “q=osp” |	Sì
+s| creation-dt	| Data di ricerca |	|	String(Date)	| “2017-10-02T10:20:01.133Z” |	Sì
+6.1+^s|matches (0..N)
+6.1+^s|participantID (1..1)
+s| scheme |	Schema dell’identificatore utilizzato	| iso6523-actorid-upis |	Stringa	| “iso6523-actorid-upis” |	Sì
+s| value	| Valore del participant identifier |	|	String	| “0201:abcdef”	| Sì
+6.1+^s|Fine participantID
+6.1+^s|docTypes (1..N)
+s| scheme |	Schema dell’identificatore utilizzato	| busdox-docid-qns |	Stringa	| “busdox-docid-qns” |	Sì
+s| value	| Valore dell'identificatore del documento |	|	String	| “urn:oasis:names:specification:ubl:schema:xsd:Order-2::Order## urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended: urn:www.peppol.eu:bis:peppol3a:ver2.0::2.1”	| Sì
+6.1+^s| Fine docTypes
+6.1+^s| entities (1..N)
+s| name	| Denominazione dell’ente	| |	String	| Uff_eFatturaPA (Azienda USL di Reggio Emilia)	| No
+s| countryCode	| Codice nazionale	| |	String	| “IT”	| No
+s| getInfo |	Indirizzo dell’ente		| | String	| |	No
+s| regDate	| Data di registrazione su Peppol Directory	| | String(Date) |	“2017-09-29”	| No
+6.1+^s| identifiers (0..N)
+s| scheme |	Schema dell’identificatore utilizzato | |	Stringa	| “IT:VAT” | Sì
+s| value	| Valore dell’identificatore | |	String	| “01234567890” |	Sì
+6.1+^s| Fine identifiers
+6.1+^s| contacts (0..N)
+s| type	| Tipologia del referente	| |	Stringa	| “Technical Contact Point” |	Sì
+s| name	| Nome del referente | |	Stringa |	“Marco Rossi” |	Sì
+s| phone |	Numero di telefono del referente	| |	Stringa	| “051-123456”	| No
+s| email	| Indirizzo email del referente	|	| Stringa	| "marco.rossi@ausl.com" | No
+6.1+^s| Fine contacts
+6.1+^s| Fine entities
+6.1+^s| Fine matches
+|===
+
+==== Messaggio d'errore
+
+Nel caso la lookup non vada a buon fine, NoTI-ER invia come response uno _StatusCode_ di BAD_REQUEST (HTTP 400) ed una descrizione dell’errore direttamente sulla _ResponseBody_.

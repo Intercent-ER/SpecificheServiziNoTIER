@@ -1,0 +1,146 @@
+== Integrazione dei dati fiscali
+(((7. Integrazione dei dati fiscali)))
+
+Il servizio di _integrazione dei dati fiscali_ consente al chiamante di integrare documenti già presenti in NoTI-ER con i dati fiscalmente rilevanti, al fine di effettuare l’invio del documento in conservazione (ParER). +
+Il servizio supporta l’integrazione da parte del chiamante di _fatture e note di credito di ciclo passivo_footnote:[per quanto riguarda i documenti di ciclo attivo (fase di Outbound), NoTI-ER è in grado di integrare in autonomia i dati fiscali.], ossia dei documenti di cui il chiamante stesso ne è il destinatario e che pervengono a NoTI-ER esclusivamente da SdI (ed eventualmente da Peppol, qualora gli emittenti risiedano in Stati esteri). +
+Dunque, tale servizio non può essere applicato alla conservazione di documenti di tipo _ordine_  e _documento di trasporto_.
+
+=== URL di invocazione
+
+L’URL per invocare il servizio di _integrazione dati fiscali_ è composto come segue:
+
+POST [blue]#https://# [red]#<host-NoTIER>:<porta-NoTIER># [blue]#/notier/rest/v1.0/documenti/daticonservazione#
+
+=== Richiesta
+
+La Request deve essere una *POST HTTP* all’indirizzo specificato nel paragrafo precedente. +
+Inoltre, deve:
+
+* specificare un _request header_ *_content-type_* di tipo *_“multipart/form-data”_*;
+* specificare un payload specificato da un payload _header_ *_content-disposition “form-data”_* come segue:
+**	attributo *name = metadati* per l’XML dei metadati;
+**	attributo *filename* valorizzatofootnote:[il nome del file può essere qualunque.];
+*	come descritto nel paragrafo 2.3., ciascuna componente del payload dovrà avere un _payload header_ *_content-type “application/xml”, “charset = utf-8”_*.
+
+==== Formato XML dei metadati di richiesta
+
+I metadati da inviare nella richiesta sono descritti dal XSD “InvioDatiConservazione”.
+Segue la descrizione dei campi dichiarata all’interno dello schema.
+
+[width="100%",cols="^,^,^,^,^,^">,options="header,footer"]
+|===
+|Tag XML | Descrizione | Vincoli | Tipo dato | Esempio | Obbl.
+6.1+^s| Inizio sessione <DatiConservazione> [1..1]
+s| Versione | Versione del XML del servizio di integrazione dati fiscali  | 10 caratteri max | Stringa | 1.0 | Sì
+6.1+^s| Inizio sessione <DatiConservazione>/<Documento> [1..1]
+s| Urn	| Identificatore del documento presente in NoTI-ER.	| 1024 caratteri max	| Stringa	| urn:notier:ORG-001:2014:2_85:CA:FATTURA	| Sì
+s|RipetiIntegrazione |	Identificatore booleano che permette di specificare se l’integrazione attuale agisce in sostituzione di una già effettuata in precedenza. |	true, false	| boolean	| false	| No
+6.1+^s| Fine sessione <DatiConservazione>/<Documento>
+6.1+^s| Inizio sessione <DatiConservazione>/<DatiRegistrazione> [1..1]
+s| NumeroRegistrazione	| Numero di registrazione del documento assegnato dal destinatario.	| 50 caratteri max	| Tipo predefinito	| 4534	|Sì
+s| DataRegistrazione	| Data di registrazione del documento assegnato dal destinatario. |	|	Data	|	| Sì
+s| Registro	| Identificativo del registro in cui il documento viene registrato dal destinatario.	| 50 caratteri max	| Tipo predefinito	| RG_001	| Sì
+s| OggettoFornitura	| Oggetto della fornitura a cui si riferisce il documento.	| 50 caratteri max	| Tipo predefinito	| FORN_INTERCENTER	| No
+s| Scadenza	| Data di scadenza del documento.	| |	Data	| |	No
+s| RiferimentoContabile	| Nel caso di contabilità finanziaria, indica gli estremi dell’impegno indicato in fattura o documento contabile equivalente.	| 50 caratteri max	| Stringa	| IMP_456	| No
+s| TipoRifContabile	| Tipo di riferimento contabile.	| Valori ammessi: +
+- IMPEGNO +
+- CAPITOLO +
+- PIANO_GESTIONALE |	Tipo predefinito	|	IMPEGNO | No
+s| RilevanzaIVA | Indica se la spesa a cui si riferisce il documento (fattura passiva) è rilevate ai fini IVA.	| Valori ammessi: +
+- SI +
+- NO	| Tipo predefinito	| NO |	No
+s| CIG	| Indica il Codice Identificativo di Gara.	| 50 caratteri max	| Stringa | GARA345	| No
+s| CUP	| Indica il Codice Unico di Progetto.	| 50 caratteri max	| Stringa |	PROG345	| No
+s| DatiSpecifici	| Ulteriori metadati specificifootnote:[set di metadati specifici aggiuntivi rispetto a quelli standard che il chiamante del servizio di integrazione ritiene opportuno inviare in Conservazione. _Tale set va concordato preventivamente con PARER_.]. | |	Any | | No
+6.1+^s| Inizio sessione <DatiConservazione>/<DatiRegistrazione>/<Protocollo> [1..1]
+s| NumeroProtocollo	| Numero nel registro di protocollo assegnato dal destinatario.	| 50 caratteri max	| Tipo predefinito	| PROT_53 |	Sì
+s| DataProtocollo	| Data di riferimento del numero di protocollo assegnato dal destinatario. | | 	Data |	|	Sì
+6.1+^s| Fine sessione <DatiConservazione>/<DatiRegistrazione>/<Protocollo>
+6.1+^s| Inizio sessione <DatiConservazione>/<DatiRegistrazione>/<DocumentiCollegati>footnote:[riferimenti ad eventuali documenti collegati già inseriti in precedenza in conservazione e di cui si hanno i riferimenti che Parer ha restituito al chiamante come esito dell’archiviazione.] [0..1]
+6.1+^s| Inizio sessione <DatiConservazione>/<DatiRegistrazione>/<DocumentiCollegati>/<DocumentoCollegato> [1..N]
+6.1+^s| Inizio sessione <DatiConservazione>/<DatiRegistrazione>/<DocumentiCollegati>/<DocumentoCollegato>/<ChiaveCollegamento> [1..1]
+s| Numero	| Numero di registro del documento collegato. |	100 caratteri max	| Stringa |	NUM_7896	| Sì
+s| Anno	| Anno di registrazione.	| 4 caratteri | Numero | 2018 |	Sì
+s| TipoRegistro	|	Tipo del registro. | 100 caratteri max	| Stringa |	REG_ACQUISTI	| Sì
+6.1+^s| Fine sessione <DatiConservazione>/<DatiRegistrazione>/<DocumentiCollegati>/<DocumentoCollegato>/<ChiaveCollegamento>
+s| DescrizioneCollegamento | Descrizione del documento collegato. | 254 caratteri max | Stringa | | No
+6.1+^s| Fine sessione <DatiConservazione>/<DatiRegistrazione>/<DocumentiCollegati>/<DocumentoCollegato>
+6.1+^s| Fine sessione <DatiConservazione>/<DatiRegistrazione>/<DocumentiCollegati>
+6.1+^s| Inizio sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico> [0..1]
+6.1+^s| Inizio sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>/<FascicoloPrincipale> [1..1]
+s| Classifica | Classificazione del fascicolo. | 254 caratteri max | Stringa | | No
+6.1+^s| Inizio sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>/<FascicoloPrincipale>/<Fascicolo> [0..1]
+s| Identificativo	| Identificativo del fascicolo principale.	| 100 caratteri max	| Stringa | | Sì
+s| Oggetto |	Oggetto del fascicolo principale.	| 1024 caratteri max	| Stringa | 	| Sì (può avere un valore nullo)
+6.1+^s| Fine sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>/<FascicoloPrincipale>/<Fascicolo>
+6.1+^s| Inizio sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>/<FascicoloPrincipale>/<SottoFascicolo> [0..1]
+s| Identificativo	| Identificativo del sotto-fascicolo.	| 100 caratteri max	| Stringa | | Sì
+s| Oggetto |	Oggetto del sotto-fascicolo.	| 1024 caratteri max	| Stringa | 	| Sì (può avere un valore nullo)
+6.1+^s| Fine sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>/<FascicoloPrincipale>/<SottoFascicolo>
+6.1+^s| Fine sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>/<FascicoloPrincipale>
+6.1+^s| Inizio sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>/<FascicoliSecondari> [0..1]
+6.1+^s| Inizio sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>/<FascicoliSecondari>/<FascicoloSecondario> [0..N]
+s| Classifica | Classificazione del fascicolo secondario. | 254 caratteri max | Stringa | | No
+6.1+^s| Inizio sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>/<FascicoliSecondari>/<FascicoloSecondario>/<Fascicolo> [0..1]
+s| Identificativo	| Identificativo del fascicolo secondario.	| 100 caratteri max	| Stringa | | Sì
+s| Oggetto |	Oggetto del fascicolo secondario.	| 1024 caratteri max	| Stringa | 	| Sì (può avere un valore nullo)
+6.1+^s| Fine sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>/<FascicoliSecondari>/<FascicoloSecondario>/<Fascicolo>
+6.1+^s| Inizio sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>/<FascicoliSecondari>/<FascicoloSecondario>/<SottoFascicolo> [0..1]
+s| Identificativo	| Identificativo del sotto-fascicolo secondario.	| 100 caratteri max	| Stringa | | Sì
+s| Oggetto |	Oggetto del sotto-fascicolo secondario.	| 1024 caratteri max	| Stringa | 	| Sì (può avere un valore nullo)
+6.1+^s| Fine sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>/<FascicoliSecondari>/<FascicoloSecondario>/<SottoFascicolo>
+6.1+^s| Fine sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>/<FascicoliSecondari>/<FascicoloSecondario>
+6.1+^s| Fine sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>/<FascicoliSecondari>
+6.1+^s| Fine sessione <DatiConservazione>/<DatiRegistrazione>/<ProfiloArchivistico>
+6.1+^s| Fine sessione <DatiConservazione>/<DatiRegistrazione>
+6.1+^s| Fine sessione <DatiConservazione>
+|===
+
+[CAUTION]
+====
+Può verificarsi che un documento già versato in conservazione venga sovrascritto dall’utente e, per questo, necessiti di un annullamento della conservazione e di un successivo versamento. +
+Nel caso di ciclo passivo, quando un documento passa in stato ANNULLATO nel dominio della sessione di conservazione, si crea in contemporanea una nuova sessione di conservazione che permette il versamento
+del nuovo documento, ereditando automaticamente i dati fiscali già integrati precedentemente. +
+Non è pertanto necessario procedere ad un ulteriore invio di questo specifico metadato.
+====
+
+=== Risposta
+
+NoTI-ER fornisce in risposta l’esito dell’operazione di invio in formato XML.
+Essa riporta, in caso di [underline]#esito negativo#, il codice d’errore e la relativa descrizione.
+
+==== Formato del file XML di risposta
+
+[width="100%",cols="^,^,^,^,^,^">,options="header,footer"]
+|===
+|Tag XML | Descrizione | Vincoli | Tipo dato | Esempio | Obbl.
+6.1+^s| Inizio sessione <EsitoRichiesta> [1..1]
+s| Versione | Versione del XML di esito risposta | 10 caratteri max | Stringa | 1.0 | Sì
+6.1+^s| Inizio sessione <EsitoRichiesta>/<Esito> [1..1]
+s| CodiceEsito | Esito della richiesta. Vale OK in caso di esito positivo, KO in caso di esito negativo. | Valori ammessi: +
+- OK +
+- KO  | Tipo predefinito | KO | Sì
+s| CodiceErrore | Definisce il codice dell'errorefootnote:[per la panoramica dei codici di errore e relativa descrizione, si veda il paragrafo 7.3.2.]. | CodiceEsito = KO |  Tipo predefinito | | Sì
+s| DescrizioneErrore | Descrizionde dell'errore. | CodiceEsito = KO | Stringa | | Sì
+6.1+^s| Fine sessione <EsitoRichiesta>/<Esito>
+6.1+^s| Fine sessione <EsitoRichiesta>
+|===
+
+==== Codici di errore
+
+I codici di errore per il servizio di _integrazione dati fiscali_ sono mappati come in tabella seguente.
+
+[width="100%",cols=",">,options="header,footer"]
+|===
+^| Codice ^| Errore
+| ERR-000-GENERICO	| Codice d'errore generico. Indica che NoTI-ER non è riuscito ad elaborare la richiesta a causa di un errore generico interno. Rientrano in questa categoria gli errori causati ad esempio dalla non disponibilità del database o problemi di natura sistemistica. +
+Il client deve considerare la richiesta come non processata e provvedere a re-inoltrarla.
+| ERR-CONSDOC-000-RICHIESTA-NON-VALIDA	| Indica che la richiesta non è valida. La causa dell'errore, dettagliata nel tag _<DescrizioneErrore>_, è la mancanza del XML dei metadati.
+| ERR-CONSDOC-001-XML-NON-VALIDO |	Indica che l'XML dei metadati non è valido. +
+L'errore si ottiene se l'XML non è valido rispetto al XSD di _<InvioDocumento>_ nella versione specificata.
+| ERR-CONSDOC-002-NON-AUTORIZZATO | Indica che il chiamante, identificato tramite il _Common Name del certificato X.509_ non è autorizzato a richiamare il servizio oppure non è autorizzato a richiedere l’integrazione del documento specificato nel tag _<DatiConservazione >/<Documento>/<Urn>_.
+| ERR-CONSDOC-003-NON-TROVATO |	Indica che il documento specificato dal tag _<DatiConservazione >/<Documento>/<Urn>_ non è presente in NoTI-ER.
+| ERR-CONSDOC-004-NON-APPLICABILE | 	Indica che per il tipo di Documento specificato dal tag _<DatiConservazione>/<Documento>/<Urn>_ non è applicabile il servizio di Integrazionefootnote:[l’errore si verifica nel caso in cui il documento non fa parte del flusso di inbound e/o si trova in uno stato che non consente l’integrazione (ad esempio, è ancora tra trasformare da SDI a UBL oppure il documento stesso è già stato integrato in precedenza).].
+||
+|===

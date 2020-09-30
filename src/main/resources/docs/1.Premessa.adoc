@@ -12,6 +12,7 @@ Tali servizi sono:
 * integrazione dati fiscali;
 * interrogazione Peppol Directory;
 * look-up participant ID;
+* monitoraggio;
 * web service blocco conservazione.
 
 Le tipologie di documento gestite da NoTI-ER sono: _Fattura, Nota di Credito, Ordine e Documento di

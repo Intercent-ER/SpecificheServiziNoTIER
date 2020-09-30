@@ -1,0 +1,194 @@
+== Servizio di monitoraggio
+(((10. Servizio di monitoraggio)))
+
+Il _servizio di monitoraggio_ permette al chiamante di ricevere una lista nella quale vengono riportate tutte le informazioni utili di pertinenza dei documenti, in accordo ai parametri di ricerca inseriti. +
+In particolare, si ricevono informazioni sul documento stesso, sul mittente e sul destinatario, su tutte le sessioni esistenti per lo specifico documento e sui relativi stati.
+
+=== URL di invocazione
+
+L’URL per invocare il servizio di _monitoraggio_ è composto come segue:
+
+GET [blue]#https://# [red]#<host-NoTIER>:<porta-NoTIER># [blue]#/notier/rest/v1.0/documenti/monitoraggio#
+
+=== Richiesta
+
+La Request deve essere una *GET HTTP* verso l’indirizzo specificato al paragrafo precedente. +
+Il servizio di monitoraggio consente di effettuare il recupero previa specifica di alcuni parametri di filtro. In tabella sottostante se ne riporta la descrizione.
+
+[width="100%",cols=",,^">,options="header,footer"]
+|===
+^| Filtro ^| Descrizione | Obbl.
+
+^| idnotier | Codice identificativo NoTI-ER del destinatario/mittnte dei documenti (e di chi effettua la ricerca).
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP_ | Sì
+
+^| tipo_ciclo | Indica se si vogliono ricercare documenti del flusso di Inbound (CP) o documenti del flusso di Outbound (CA).
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?tipo_ciclo=ca_ | Sì
+
+
+^| urn | URN assegnato al documento.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP&tipo_ciclo=ca&urn=urn:notier:sauslre01uff_efatturapa:2018:8550_2f18:CA:DOCUMENTO_DI_TRASPORTO:01_ | No
+
+^| destinatario | Valorizzabile se in precedenza è stato inserito il filtro per i documenti di outbound (CA)footnote:[se si valorizza il parametro _destinatario_ e al contempo si è valorizzato _tipociclo=CP_, il filtro viene ignorato.] . In questo campo deve essere indicata [underline]#la Partita Iva o il Codice Fiscale# del destinatario.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP&tipo_ciclo=ca&destinatario=12345678901_ | No
+
+^| mittente | Valorizzabile se in precedenza è stato inserito il filtro per i documenti di inbound (CP)footnote:[se si valorizza il parametro _mittente_ e al contempo si è valorizzato _tipociclo=CA_, il filtro viene ignorato.] . In questo campo deve essere indicata [underline]#la Partita Iva o il Codice Fiscale# del mittente.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP&tipo_ciclo=ca&mittente=12345678901_ | No
+
+^| tipo_documentofootnote:[nel caso in cui questo filtro non venga valorizzato, il servizio restituisce di default solo la lista dei documenti principali (FATTURA, NOTA_DI_CREDITO, DOCUMENTO_DI_TRASPORTO, ORDINE). È possibile inserire il filtro per più di un tipo documento contemporaneamente, usando il separatore “,”.] | Indica il tipo documento che si vuole cercare.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP idnotier=Uff_test_AP_to_AP&tipo_ciclo=ca&tipo_documento=ordine,documento_di_trasporto_ | No
+
+^| stato_documento | Indica lo stato dei documenti sulle sessioni di invio/ricezione/conservazione ([underline]#metastato# di invio/ricezione/esito).
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP&tipo_ciclo=ca&stato_documento=DA_RECAPITARE_ | No
+
+^| identificativo_nso | Permette la ricerca puntuale per identificativo NSO.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP&tipo_ciclo=ca&identificativo_nso=6543210_ | No
+
+^| data_inizio | Parametro utilizzato per abilitare il filtraggio per _data di ricezione NoTI-ER_. +
+La data va specificata nel formato ‘GGMMAAAA’.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP&tipo_ciclo=ca&data_inizio=01092020_ | No
+
+^| data_fine | Parametro utilizzato per abilitare il filtraggio per _data di ricezione NoTI-ER_. +
+La data va specificata nel formato ‘GGMMAAAA’.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP&tipo_ciclo=ca&data_inizio=01092020&data_fine=25092020_ | No
+
+^| data_invio_inizio | Parametro utilizzato per filtrare i documenti con data di fine sessione di invio maggiore di quella inserita (in formato ‘GGMMAAAA’)footnote:[valido solo nel caso di documenti di outbound (CA).].
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP&tipo_ciclo=ca&data_invio_inizio=01092020_ | No
+
+^| data_invio_fine | Parametro utilizzato per filtrare i documenti con data di fine sessione di invio minore di quella inserita (in formato ‘GGMMAAAA’)footnote:[valido solo nel caso di documenti di outbound (CA).].
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP&tipo_ciclo=ca&data_invio_inizio=01092020&data_invio_fine=03092020_ | No
+
+^| inizio | Parametro utilizzato per abilitare la paginazione della lista di documenti, indica l’indice da cui iniziare la paginazionefootnote:[per convenzione, l'indice del primo documento è 0.].
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP&tipo_ciclo=ca&inizio=1&offset=100_ | sì, se _offset_ attivo
+
+^| offset | Parametro utilizzato per abilitare la paginazione della lista di documenti, indica il numero di documenti da restituire a partire dal valore del parametro “inizio”.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP&tipo_ciclo=ca&inizio=1&offset=100_ | sì, se _inizio_ attivo
+|||
+|===
+
+[CAUTION]
+====
+La richiesta con parametri, come mostrato in tabella nella colonna _descrizione_, va effettuata invocando l’URL specificato al paragrafo 10.1, a cui si aggiungono i parametri desiderati nella forma _chiave=valore_, preceduti dal carattere “?” e separati dal carattere “&”.
+
+Il servizio restituisce un massimo di *50* documenti (offset preimpostato a 50, se non valorizzato diversamente), coerentemente con i filtri adottati.	 +
+In aggiunta a questo, vengono restituite anche le informazioni di _<TotaleDocumenti>_, che informa sul totale dei documenti corrispondenti ai parametri di filtro inseriti, e _<TotaleDocumentiFiltrati>_, che informa sul totale dei documenti presenti nella response (al più uguale a offset).
+
+Inoltre, in mancanza della valorizzazione dei parametri di filtro _data_inizio_ e _data_fine_, viene restituita una lista con il riferimento standard agli *ultimi 30 giorni* dal momento della chiamata.
+====
+
+=== Risposta
+
+Se l’esito della ricerca è positivo, NoTI-ER risponde con l’elenco dei documenti che corrispondono ai filtri inseriti, altrimenti viene visualizzato un codice d’errore con relativa descrizione.
+
+==== Formato del file XML di risposta
+
+L’XML di risposta prodotto da NoTI-ER è descritto dal XSD “EsitoMonitoraggio”. 	+
+Segue una descrizione dei campi dichiarati all’interno dello schema.
+
+[width="100%",cols="^,^,^,^,^,^">,options="header,footer"]
+|===
+|Tag XML | Descrizione | Vincoli | Tipo dato | Esempio | Obbl.
+6.1+^s| Inizio sessione <EsitoMonitoraggio> [1..1]
+s| Versione | Versione del XML di esito risposta | 10 caratteri max | Stringa | 1.0 | Sì
+6.1+^s| Inizio sessione <EsitoMonitoraggio>/<Esito> [1..1]
+s| CodiceEsito	| Esito della richiesta. Vale OK in caso di esito positivo, KO in caso di esito negativo	| Valori ammessi: +
+- OK +
+- KO	| Tipo predefinito	| OK	| Sì
+s| CodiceErrore	| Definisce il codice dell’errore |	Presente se CodiceEsito = KO	| Tipo predefinito	| ERR-002-RICHIESTA-NON-VALIDA	| No
+s| DescrizioneErrore	| Descrizione dell’errorefootnote:[per il significato dei codici d’errore si veda il paragrafo 10.3.2.]	| Presente se CodiceEsito = KO	| Stringa	| - |	No
+6.1+^s| Fine sessione <EsitoMonitoraggio>/<Esito>
+6.1+^s| Inizio sessione <EsitoMonitoraggio>/<Parametri>footnote:[questa sezione, come tutte le successive, esiste solo se _EsitoRichiesta=OK_.] [1..1]
+s| IdNotier	| Identificativo NoTI-ER del soggetto chiamante |	max 1024 caratteri	|Stringa	|Uff_test_AP_to_AP	| Sì
+s| TipoCiclo	| Specifica il flusso documentale (Inbound, Outbound) |	CA, CP	| Tipo predefinito	| CA	| Sì
+s| Urn	| URN del documento	| max 1024 caratteri	| Stringa	| urn:notier:Uff_test_AP_to_AP:2020: DDT_5f06082020_5fTEST_ 5fDEDICATED:CA:DOCUMENTO _DI_TRASPORTO:01	| No
+s| Destinatario |	P.Iva o CF del destinatario dei documenti |	max 1024 caratteri +
+ha valore solo in caso di _tipo_ciclo=CA_ |	Stringa	| TR78945612	| No
+s| Mittente	| P.Iva o CF del mittente dei documenti	| max 1024 caratteri +
+ha valore solo in caso di _tipo_ciclo=CP_ |	Stringa	| TR78945612	| No
+s| TipoDocumento	| Tipologia di documento |	I valori ammessi sono: +
+- FATTURA +
+- NOTA_DI_CREDITO +
+- DOCUMENTO_DI_TRASPORTO +
+- ORDINE +
+- NOTIFICA_MDN +
+- NOTIFICA_DI_SCARTO +
+- RICEVUTA_DI_CONSEGNA +
+- NOTIFICA_DI_MANCATA_CONSEGNA +
+- NOTIFICA_DI_ESITO_COMMITTENTE +
+- NOTIFICA_DI_ESITO_CEDENTE +
+- NOTIFICA_SCARTO_ESITO_COMMITTENTE +
+- NOTIFICA_DI_DECORRENZA_TERMINI +
+- ATTESTAZIONE_DI_FILE_NON_RECAPITABILE +
+- NOTIFICA_METADATI_FILE_FATTURA +
+- ESITO_CONSERVAZIONE |	Tipo predefinito	| ORDINE	| No
+s| StatoDocumento	| Indica il metastato del documento e quindi il suo stato delle sessioni di invio, ricezione o conservazione	| I valori ammessi sono: +
+- DA_INVIARE  +
+- INVIATO +
+- IN_LAVORAZIONE +
+- DA_RECAPITARE +
+- RECAPITATO +
+- CONSEGNATO +
+- NON_CONSEGNABILE +
+- ACCETTATO +
+- RIFIUTATO +
+- DECORRENZA_TERMINI +
+- DA_VERSARE +
+- VERSATO +
+- IN_ATTESA_DATI_FISCALI +
+- NON_VERSATO +
+- NON_INVIATO +
+- DA_ANNULLARE +
+- ANNULLATO +
+- DA_INVIARE_NSO +
+- NON_INVIATO_NSO +
+- SCARTATO_NSO +
+- INVIATO_NSO +
+- NON_ANNULLABILE +
+- VALIDATO_NSO +
+- MANCATA_CONSEGNA +
+- NON_INVIABILE	| Tipo predefinito	| RECAPITATO	| No
+s| IdentificativoNSO	| Identificativo NSO del documento (ordine). |	max 50 caratteri |	Stringa	| 1234567	| No
+s| DataInizio |	Minima data di ricezione in NoTI-ER del documento. |	|	Data	| 21092020	| No
+s| DataFine	| Massima data di ricezione in NoTI-ER del documento. |	|	Data	| 21092020	| No
+s| DataInvioInizio	| Minima data di invio documento	| | 	Data	| 21092020	| No
+s| DataInvioFine |	Massima data di invio documento	| |	Data |	21092020	| No
+6.1+^s| Inizio sessione <EsitoMonitoraggio>/<Parametri>/<Paginazione> [1..1]
+s| Inizio	| Indice iniziale di paginazione |	numero intero di max 4 cifre	| numero	| 0	| Sì
+s| Fine	| Indice finale di paginazione	| numero intero di max 4 cifre	| numero	| 100	| Sì
+6.1+^s| Fine sessione <EsitoMonitoraggio>/<Parametri>/<Paginazione>
+6.1+^s| Fine sessione <EsitoMonitoraggio>/<Parametri>
+6.1+^s| Inizio sessione <EsitoMonitoraggio>/<ListaDocumenti> [1..1]
+s| TotaleDocumenti	| totale dei documenti trovati in accordi ai filtri inseriti	| numero intero di max 4 cifre	| numero	| 15	| Sì
+s| TotaleDocumentiFiltrati	| totale dei documenti restituiti, in accordo ai filtri inseriti	| numero intero di max 4 cifre |	numero  |	8	| Sì
+6.1+^s| Inizio sessione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti> [1..1]
+6.1+^s| Inizio sessione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>/<Documento> [1..N]
+s| Urn	| URN del documento	| max 1024 caratteri	| Stringa	| urn:notier:Uff_test_AP_to_AP: 2020:DDT_5f06082020_5fTEST _5fDEDICATED:CA:DOCUMENTO_DI_ TRASPORTO:01	| Sì
+6.1+^s| Inizio sessione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>/<Documento>/<Chiave> [1..1]
