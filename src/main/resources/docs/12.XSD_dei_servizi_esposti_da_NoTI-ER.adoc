@@ -1,0 +1,1053 @@
+== XSD dei servizi esposti da NoTI-ER
+(((12. XSD dei servizi esposti da NoTI-ER )))
+
+=== Invio documento
+
+L’XSD riportata in questo paragrafo si riferisce ai _metadati di invio documento_.
+
+[literal]
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="xs3p.xsl"?>
+<xs:schema
+	xmlns="http://notier.intercenter.rer.it/services/1.0/inviodocumento/request"
+	targetNamespace="http://notier.intercenter.rer.it/services/1.0/inviodocumento/request"
+	version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="InvioDocumento">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Versione" type="TokenNVMax10Type"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="Documento" type="DocumentoType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="Configurazione" type="ConfigurazioneType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="Integrazione" type="IntegrazioneType"
+					minOccurs="0" maxOccurs="1" />
+				<xs:element name="Collegamento" type="CollegamentoType"
+					minOccurs="0" maxOccurs="1" />
+				<xs:element name="MetadatiBusdox" type="MetadatiBusdoxType"
+					minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="DocumentoType">
+		<xs:sequence>
+			<xs:element name="Chiave" type="ChiaveDocumentoType"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="Rappresentazione" type="RappresentazioneType"
+				minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ChiaveDocumentoType">
+		<xs:sequence>
+			<xs:element name="Mittente" type="TokenNVMax50Type"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="TipoMittente" type="TipoMittenteType"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="Anno" type="IntMax4DgtType" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="Numero" type="TokenNVMax50Type"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="TipoDocumento" type="TipoDocumentoType"
+				minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RappresentazioneType">
+		<xs:sequence>
+			<xs:element name="Formato" type="FormatoType" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="Versione" type="TokenNVMax10Type"
+				minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ConfigurazioneType">
+		<xs:sequence>
+			<xs:element name="InvioSdi" type="xs:boolean" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="InvioPeppol" type="xs:boolean"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="InvioConservazione" type="xs:boolean"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="ApprovazioneAutomatica" type="xs:boolean"
+				minOccurs="1" maxOccurs="1" />
+			<!-- Vedi tag Articolo73 di SDI -->
+			<xs:element name="AccettaChiaveDuplicata" type="xs:boolean"
+				minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="IntegrazioneType">
+		<xs:sequence>
+			<xs:element name="Registro" type="TokenRegistroType"
+				minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CollegamentoType">
+		<xs:sequence>
+			<xs:element name="Urn" type="UrnDocumentoType"
+				minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MetadatiBusdoxType">
+		<xs:sequence>
+			<xs:element name="RecipientIdentifier" type="TokenNVMax254Type"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="SenderIdentifier" type="TokenNVMax254Type"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="DocumentIdentifier" type="TokenNVMax1024Type"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="ProcessIdentifier" type="TokenNVMax1024Type"
+				minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="TokenNVMax1024Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1" />
+			<xs:maxLength value="1024" />
+			<!-- BUG identificato in data 02-04-2019 @Manuel Gozzi: <xs:maxLength value="254" /> -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax254Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1" />
+			<xs:maxLength value="254" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax50Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1" />
+			<xs:maxLength value="50" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax10Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1" />
+			<xs:maxLength value="10" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenRegistroType">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1" />
+			<xs:maxLength value="100" />
+			<xs:pattern value="[A-Za-z0-9_][A-Za-z0-9\. _-]*" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="IntMax4DgtType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0" />
+			<xs:maxInclusive value="9999" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FormatoType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="UBL" />
+			<xs:enumeration value="SDI" />
+			<xs:enumeration value="BIS_3" />
+			<xs:enumeration value="PEPPOL" />
+			<!-- INIZIO: Aggiunto in data 02-04-2019 @author Manuel Gozzi -->
+			<xs:enumeration value="BIS_3" />
+			<!-- FINE: Aggiunto in data 02-04-2019 @author Manuel Gozzi -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TipoMittenteType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="NOTIER" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UrnDocumentoType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0" />
+			<xs:maxLength value="256" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TipoDocumentoType">
+		<xs:restriction base="xs:NMTOKEN">
+			<!-- DOCUMENTI UBL -->
+			<xs:enumeration value="FATTURA" />
+			<xs:enumeration value="NOTA_DI_CREDITO" />
+			<xs:enumeration value="DOCUMENTO_DI_TRASPORTO" />
+			<xs:enumeration value="ORDINE" />
+			<!-- NOTIFICHE SDI -->
+			<xs:enumeration value="NOTIFICA_DI_ESITO_COMMITTENTE" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
+
+=== Esito Richiesta
+
+L’XSD “EsitoRichiesta v1.1.” qui sotto riportato è da intendere come unico al quale fare riferimento per le response di NoTI-ER.
+
+[literal]
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="xs3p.xsl"?>
+<xs:schema xmlns="http://notier.intercenter.rer.it/services/1.0/esito/response" targetNamespace="http://notier.intercenter.rer.it/services/1.0/esito/response"
+	version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="EsitoRichiesta">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Versione" type="TokenNVMax10Type" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="Esito" type="EsitoType" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="Documento" type="DocumentoType" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="ListaDocumenti" type="ListaDocumentiType" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="ListaDocumentiType">
+		<xs:sequence>
+			<xs:element name="TotaleDocumentiScaricabili" type="xs:integer" minOccurs="1" maxOccurs="1" />
+			<xs:element name="NumeroDocumenti" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Documenti" type="DocumentiType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="DataInizio" type="xs:dateTime" minOccurs="1" maxOccurs="1" />
+			<xs:element name="DataFine" type="xs:dateTime" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DocumentiType">
+		<xs:sequence>
+			<xs:element name="Documento" type="DocumentoType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EsitoType">
+		<xs:sequence>
+			<xs:element name="CodiceEsito" type="CodiceEsitoType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="CodiceErrore" type="CodiceErrore" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="DescrizioneErrore" type="TokenNVMax4096Type" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DocumentoType">
+		<xs:sequence>
+		    <xs:element name="Destinatario" type="TokenNVMax50Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Urn" type="TokenNVMax1024Type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="DataRicezioneNotier" type="xs:dateTime" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="UrnCollegato" type="TokenNVMax1024Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="StatoGiacenza" type="StatoGiacenzaType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="StatoConservazione" type="StatoConservazioneType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Chiave" type="ChiaveDocumentoType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Rappresentazione" type="RappresentazioneType" minOccurs="1"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ChiaveDocumentoType">
+		<xs:sequence>
+			<xs:element name="Mittente" type="TokenNVMax50Type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="TipoMittente" type="TipoMittenteType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Anno" type="IntMax4DgtType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Numero" type="TokenNVMax70Type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="TipoDocumento" type="TipoDocumentoType" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RappresentazioneType">
+		<xs:sequence>
+			<xs:element name="Formato" type="FormatoType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Versione" type="TokenNVMax50Type" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UrnCollegatiType">
+		<xs:sequence>
+			<xs:element name="Urn" type="TokenNVMax1024Type" minOccurs="1"  maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="CodiceEsitoType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="OK"/>
+			<xs:enumeration value="KO"/>
+			<xs:enumeration value="WARN"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CodiceErrore">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="ERR-000-GENERICO"/>
+			<xs:enumeration value="ERR-INVIODOC-000-RICHIESTA-NON-VALIDA"/>
+			<xs:enumeration value="ERR-INVIODOC-001-XML-NON-VALIDO"/>
+			<xs:enumeration value="ERR-INVIODOC-002-NON-AUTORIZZATO"/>
+			<xs:enumeration value="ERR-INVIODOC-003-ORG-NON-VALIDA"/>
+			<xs:enumeration value="ERR-INVIODOC-004-TIPODOC-NON-VALIDO"/>
+			<xs:enumeration value="ERR-INVIODOC-005-FORMATO-RAPPR-NON-VALIDO"/>
+			<xs:enumeration value="ERR-INVIODOC-006-VERSIONE-RAPPR-NON-VALIDA"/>
+			<xs:enumeration value="ERR-INVIODOC-007-DOC-NON-VALIDO-XSD"/>
+			<xs:enumeration value="ERR-INVIODOC-008-DOC-NON-VALIDO-SCHEMATRON"/>
+			<xs:enumeration value="ERR-INVIODOC-009-DOC-DUPLICATO"/>
+			<xs:enumeration value="ERR-INVIODOC-010-DIMENSIONI-ECCESSIVE"/>
+            <xs:enumeration value="ERR-RECDOC-000-RICHIESTA-NON-VALIDA"/>
+            <xs:enumeration value="ERR-RECDOC-001-NON-AUTORIZZATO"/>
+            <xs:enumeration value="ERR-RECDOC-002-NON-TROVATO"/>
+			<xs:enumeration value="ERR-CONSDOC-000-RICHIESTA-NON-VALIDA"/>
+			<xs:enumeration value="ERR-CONSDOC-001-XML-NON-VALIDO"/>
+            <xs:enumeration value="ERR-CONSDOC-002-NON-AUTORIZZATO"/>
+            <xs:enumeration value="ERR-CONSDOC-003-NON-TROVATO"/>
+            <xs:enumeration value="ERR-CONSDOC-004-NON-APPLICABILE"/>
+            <xs:enumeration value="ERR-BLOCCOCONS-001-NON-AUTORIZZATO" />
+            <xs:enumeration value="ERR-BLOCCOCONS-002-NON-TROVATO" />
+            <xs:enumeration value="ERR-BLOCCOCONS-003-NON-APPLICABILE" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StatoGiacenzaType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="DA_RECAPITARE"/>
+			<xs:enumeration value="IN_LAVORAZIONE"/>
+			<xs:enumeration value="RECAPITATO"/>
+		</xs:restriction>
+	</xs:simpleType>
+		<xs:simpleType name="StatoConservazioneType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="DA_NON_INVIARE"/>
+			<xs:enumeration value="IN_ATTESA_DATI_FISCALI"/>
+			<xs:enumeration value="DA_INVIARE"/>
+			<xs:enumeration value="INVIATO_OK"/>
+			<xs:enumeration value="INVIATO_KO"/>
+			<xs:enumeration value="DA_ANNULLARE"/>
+			<xs:enumeration value="ANNULLATO"/>
+			<xs:enumeration value="NON_ANNULLABILE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax254Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="254"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax70Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="70"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax50Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax10Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FormatoType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="UBL"/>
+			<xs:enumeration value="SDI"/>
+			<xs:enumeration value="PARER"/>
+			<xs:enumeration value="UBL_EU"/>
+			<xs:enumeration value="BIS_3"/>
+			<xs:enumeration value="NSO"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax1024Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1024"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax4096Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="4096"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TipoDocumentoType">
+		<xs:restriction base="xs:NMTOKEN">
+			<!-- DOCUMENTI UBL -->
+			<xs:enumeration value="FATTURA"/>
+			<xs:enumeration value="NOTA_DI_CREDITO"/>
+			<xs:enumeration value="DOCUMENTO_DI_TRASPORTO"/>
+			<xs:enumeration value="ORDINE"/>
+			<!-- RICEVUTE PEPPOL -->
+			<xs:enumeration value="NOTIFICA_MDN"/>
+			<!-- RICEVUTE SDI -->
+			<xs:enumeration value="NOTIFICA_DI_SCARTO"/>
+			<xs:enumeration value="RICEVUTA_DI_CONSEGNA"/>
+			<xs:enumeration value="NOTIFICA_DI_MANCATA_CONSEGNA"/>
+			<xs:enumeration value="NOTIFICA_DI_ESITO_COMMITTENTE"/>
+			<xs:enumeration value="NOTIFICA_DI_ESITO_CEDENTE"/>
+			<xs:enumeration value="NOTIFICA_SCARTO_ESITO_COMMITTENTE"/>
+			<xs:enumeration value="NOTIFICA_DI_DECORRENZA_TERMINI"/>
+			<xs:enumeration value="ATTESTAZIONE_DI_FILE_NON_RECAPITABILE"/>
+			<xs:enumeration value="NOTIFICA_METADATI_FILE_FATTURA"/>
+			<!-- RICEVUTE PARER -->
+			<xs:enumeration value="ESITO_CONSERVAZIONE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="IntMax4DgtType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="9999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TipoMittenteType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="NOTIER"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
+
+=== Integrazione dati fiscali
+
+l'XSD riportato in questo paragrafo fa riferimento all'_invio dei dati fiscali per la conservazione_.
+
+[literal]
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://notier.intercenter.rer.it/services/1.0/daticonservazione/request" targetNamespace="http://notier.intercenter.rer.it/services/1.0/daticonservazione/request" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   version="1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="DatiConservazione">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Versione" type="TokenNVMax10Type" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="Documento" type="DocumentoType" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="DatiRegistrazione" type="DatiRegistrazioneType" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!-- IDENTIFICATIVO DEL DOCUMENTO DA INTEGRARE -->
+  <xs:complexType name="DocumentoType">
+    <xs:sequence>
+      <xs:element name="Urn" type="TokenNVMax1024Type" minOccurs="1" maxOccurs="1"/>
+	  <xs:element name="RipetiIntegrazione" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- DATI DI REGISTRAZIONE DOCUMENTO PER INVIO A PARER -->
+  <xs:complexType name="DatiRegistrazioneType">
+    <xs:sequence>
+    <!-- DATI OBBLIGATORI PER INVIO A PARER -->
+      <xs:element name="NumeroRegistrazione" type="TokenNVMax50Type" minOccurs="1"  maxOccurs="1"/>
+      <xs:element name="DataRegistrazione" type="xs:date" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Registro" type="TokenNVMax50Type" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Protocollo" type="ProtocolloType" minOccurs="1" maxOccurs="1"/>
+      <!-- DATI FACOLTATIVI PER INVIO A PARER -->
+      <xs:element name="OggettoFornitura" type="TokenNVMax50Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Scadenza" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RiferimentoContabile" type="TokenNVMax50Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="TipoRifContabile" type="TipoRifContabileType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RilevanzaIVA" type="RilevanzaIVAType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CIG" type="TokenNVMax50Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CUP" type="TokenNVMax50Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DocumentiCollegati" type="DocumentoCollegatoType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ProfiloArchivistico" type="ProfiloArchivisticoType" minOccurs="0" maxOccurs="1"/>
+      <!-- DATI SPECIFICI ENTE -->
+      <xs:element name="DatiSpecifici" type="DatiSpecificiType" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ProtocolloType">
+    <xs:sequence>
+      <xs:element name="NumeroProtocollo" type="TokenNVMax50Type" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="DataProtocollo" type="xs:date" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="RilevanzaIVAType">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="SI"/>
+      <xs:enumeration value="NO"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="TipoRifContabileType">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="IMPEGNO"/>
+      <xs:enumeration value="CAPITOLO"/>
+      <xs:enumeration value="PIANO_GESTIONALE"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DatiSpecificiType">
+    <xs:sequence>
+      <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentoCollegatoType">
+    <xs:sequence>
+      <xs:element name="DocumentoCollegato" minOccurs="1" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ChiaveCollegamento" type="ChiaveType"/>
+            <xs:element name="DescrizioneCollegamento" type="TokenNVMax254Type"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ChiaveType">
+    <xs:sequence>
+      <xs:element name="Numero" type="TokenNVMax100Type" minOccurs="1" maxOccurs="1"  />
+      <xs:element name="Anno" type="IntMax4DgtType"  minOccurs="1" maxOccurs="1" />
+      <xs:element name="TipoRegistro" type="TokenNVMax100Type"  minOccurs="1" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ProfiloArchivisticoType">
+    <xs:sequence>
+      <xs:element name="FascicoloPrincipale" type="CamiciaFascicoloType" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="FascicoliSecondari" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="FascicoloSecondario" type="CamiciaFascicoloType" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CamiciaFascicoloType">
+    <xs:sequence>
+      <xs:element name="Classifica" type="TokenNVMax254Type" minOccurs="0" maxOccurs="1"  />
+      <xs:element name="Fascicolo" type="FascicoloType" minOccurs="0" maxOccurs="1"  />
+      <xs:element name="SottoFascicolo" type="FascicoloType" minOccurs="0" maxOccurs="1"  />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FascicoloType">
+    <xs:sequence>
+      <xs:element name="Identificativo" type="TokenNVMax100Type"/>
+      <xs:element name="Oggetto" type="TokenNVMax1024Type" nillable="true"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="TokenNVMax10Type">
+    <xs:restriction base="xs:token">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="10"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="TokenNVMax50Type">
+    <xs:restriction base="xs:token">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="50"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="TokenNVMax100Type">
+    <xs:restriction base="xs:token">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="TokenNVMax254Type">
+    <xs:restriction base="xs:token">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="254"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="TokenNVMax1024Type">
+    <xs:restriction base="xs:token">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="1024"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="IntMax4DgtType">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="9999"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+
+=== Lookup Participant ID
+
+L'XSD riportato in questo paragrafo fa riferimento alla _response XML_ restituita dal _servizio di Lookup_.
+
+[literal]
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="xs3p.xsl"?>
+<xs:schema
+	xmlns="http://notier.intercenter.rer.it/services/1.0/lookup/response"
+	targetNamespace="http://notier.intercenter.rer.it/services/1.0/lookup/response"
+	version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="LookupResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Esito" type="xs:boolean" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="ErrorMessage" type="xs:string"
+					minOccurs="0" maxOccurs="1" />
+				<xs:element name="ParticipantIdentifier" type="xs:string"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="Metadata" type="MetadatoType"
+					minOccurs="1" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="MetadatoType">
+		<xs:sequence>
+			<xs:element name="Processi" type="ProcessoType"
+				minOccurs="1" maxOccurs="unbounded" />
+			<xs:element name="ParticipantIdentifier"
+				type="ParticipantIdentifierType" minOccurs="1" maxOccurs="1" />
+			<xs:element name="DocumentIdentifier"
+				type="DocumentIdentifierType" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ParticipantIdentifierType">
+		<xs:complexContent>
+			<xs:extension base="SchemaValueType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="DocumentIdentifierType">
+		<xs:complexContent>
+			<xs:extension base="SchemaValueType">
+				<xs:sequence>
+					<xs:element name="Name" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SchemaValueType">
+		<xs:sequence>
+			<xs:element name="Schema" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="Value" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ProcessoType">
+		<xs:complexContent>
+			<xs:extension base="SchemaValueType">
+				<xs:sequence>
+					<xs:element name="Endpoint" type="EndpointType"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="EndpointType">
+		<xs:sequence>
+			<xs:element name="Address" type="xs:string" />
+			<xs:element name="ServiceActivationDate"
+				type="xs:dateTime" minOccurs="0" />
+			<xs:element name="ServiceExpirationDate"
+				type="xs:dateTime" minOccurs="0" />
+			<xs:element name="Certificate" type="xs:string" />
+			<xs:element name="ServiceDescription" type="xs:string" />
+			<xs:element name="TechnicalContactUrl" type="xs:string" />
+			<xs:element name="TechnicalInformationUrl"
+				type="xs:string" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="transportProfile" type="xs:string" />
+	</xs:complexType>
+</xs:schema>
+
+=== Monitoraggio
+
+L'XSD riportato in queto paragrafo fa riferimento alla _response XML_ restituita dal _servizio di monitoraggio_.
+
+[literal]
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="xs3p.xsl"?>
+<xs:schema xmlns="http://notier.intercenter.rer.it/services/1.0/monitoraggio/response" targetNamespace="http://notier.intercenter.rer.it/services/1.0/monitoraggio/response"
+	version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="EsitoMonitoraggio">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Versione" type="TokenNVMax10Type" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="Esito" type="EsitoType" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="Parametri" type="ParametriType" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="ListaDocumenti" type="ListaDocumentiType" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="ParametriType">
+		<xs:sequence>
+			<xs:element name="IdNotier" type="TokenNVMax1024Type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="TipoCiclo" type="TokenNVMax1024Type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Urn" type="TokenNVMax1024Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Destinatario" type="TokenNVMax1024Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Mittente" type="TokenNVMax1024Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="TipoDocumento" type="TokenNVMax1024Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="StatoDocumento" type="TokenNVMax1024Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="InviatoNso" type="TokenNVMax10Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="DataInizio" type="TokenNVMax1024Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="DataFine" type="TokenNVMax1024Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="DataInvioInizio" type="TokenNVMax1024Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="DataInvioFine" type="TokenNVMax1024Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Paginazione" type="PaginazioneType" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PaginazioneType">
+		<xs:sequence>
+			<xs:element name="Inizio" type="xs:integer" minOccurs="1" maxOccurs="1" /><!-- "vista da ..." -->
+			<xs:element name="Fine" type="xs:integer" minOccurs="1" maxOccurs="1"/><!-- "a..." -->
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ListaDocumentiType">
+		<xs:sequence>
+			<xs:element name="TotaleDocumenti" type="xs:integer" minOccurs="1" maxOccurs="1" /><!-- "... di x elementi" -->
+			<xs:element name="TotaleDocumentiFiltrati" type="xs:integer" minOccurs="1" maxOccurs="1" />
+			<xs:element name="Documenti" type="DocumentiType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DocumentiType">
+		<xs:sequence>
+			<xs:element name="Documento" type="DocumentoType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EsitoType">
+		<xs:sequence>
+			<xs:element name="CodiceEsito" type="CodiceEsitoType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="CodiceErrore" type="CodiceErrore" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="DescrizioneErrore" type="TokenNVMax4096Type" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DocumentoType">
+		<xs:sequence>
+			<!-- Campi Comuni -->
+			<xs:element name="Urn" type="TokenNVMax1024Type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Chiave" type="ChiaveDocumentoType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="DataRicezioneNotier" type="xs:dateTime" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="StatoDocumento" type="StatoDocumentoType" minOccurs="1" maxOccurs="1"/>
+			<!-- Ciclo Attivo -->
+			<xs:element name="DataInvio" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="IdentificativoNSO" type="TokenNVMax50Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="IdentificativoSDI" type="TokenNVMax50Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Destinatario" type="SoggettoType" minOccurs="0" maxOccurs="1"/>
+			<!-- Ciclo Passivo -->
+		    <xs:element name="Mittente" type="SoggettoType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="StatoDocumentoType">
+		<xs:sequence>
+			<xs:element name="Sessione" type="SessioneType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SessioneType">
+		<xs:sequence>
+			<xs:element name="TipoSessione" type="TipoSessioneType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="StatoSessione" type="StatoSessioneType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="DataInizioSessione" type="xs:dateTime" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="DataFineSessione" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="IndirizzoIP" type="TokenNVMax50Type" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SoggettoType">
+		<xs:sequence>
+			<xs:element name="RagioneSociale" type="TokenNVMax1024Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="IdPeppol" type="TokenNVMax50Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="CodiceFiscale" type="TokenNVMax50Type" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="PartitaIVA" type="TokenNVMax50Type" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ChiaveDocumentoType">
+		<xs:sequence>
+			<xs:element name="Mittente" type="TokenNVMax50Type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Anno" type="IntMax4DgtType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Numero" type="TokenNVMax70Type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="TipoDocumento" type="TipoDocumentoType" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="CodiceEsitoType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="OK"/>
+			<xs:enumeration value="KO"/>
+			<xs:enumeration value="WARN"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CodiceErrore">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="ERR-000-GENERICO"/>
+			<xs:enumeration value="ERR-001-SOGGETTO-RICHIESTA-MANCANTE"/>
+			<xs:enumeration value="ERR-002-RICHIESTA-NON-VALIDA"/>
+			<xs:enumeration value="WARN-001-MITTENTE-NON-TROVATO"/>
+			<xs:enumeration value="WARN-002-DESTINATARIO-NON-TROVATO"/>
+			<xs:enumeration value="WARN-003-NESSUN-RISULTATO"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TipoSessioneType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="INVIO_SDI"/>
+			<xs:enumeration value="RICEZIONE_SDI"/>
+			<xs:enumeration value="INVIO_PEPPOL"/>
+			<xs:enumeration value="RICEZIONE_PEPPOL"/>
+			<xs:enumeration value="INVIO_PARER"/>
+			<xs:enumeration value="RICEZIONE_PARER"/>
+			<xs:enumeration value="INVIO_NSO"/>
+			<xs:enumeration value="RICEZIONE_NSO"/>
+		</xs:restriction>
+	</xs:simpleType>
+		<xs:simpleType name="StatoSessioneType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="ACCETTATO"/>
+			<xs:enumeration value="ANNULLATO"/>
+			<xs:enumeration value="ATTESA_VALIDAZIONE"/>
+			<xs:enumeration value="BLOCCATO_DA_NSO"/>
+			<xs:enumeration value="CONSEGNATO"/>
+			<xs:enumeration value="CONSEGNATO_NSO"/>
+			<xs:enumeration value="DA_ANNULLARE"/>
+			<xs:enumeration value="DA_APPROVARE"/>
+			<xs:enumeration value="DA_FIRMARE"/>
+			<xs:enumeration value="DA_INOLTRARE_BUSDOX"/>
+			<xs:enumeration value="DA_INVIARE"/>
+			<xs:enumeration value="DA_INVIARE_NSO"/>
+			<xs:enumeration value="DA_INVIARE_SDI"/>
+			<xs:enumeration value="DA_NON_INVIARE"/>
+			<xs:enumeration value="DA_NON_INVIARE_NSO"/>
+			<xs:enumeration value="DA_RECAPITARE"/>
+			<xs:enumeration value="DA_TRASFORMARE"/>
+			<xs:enumeration value="DUPLICATO"/>
+			<xs:enumeration value="ELABORATO_KO"/>
+			<xs:enumeration value="ELABORATO_OK"/>
+			<xs:enumeration value="INVIATO_BUSDOX"/>
+			<xs:enumeration value="INVIATO_KO"/>
+			<xs:enumeration value="INVIATO_NSO"/>
+			<xs:enumeration value="INVIATO_OK"/>
+			<xs:enumeration value="INVIATO_SDI"/>
+			<xs:enumeration value="IN_ATTESA_DATI_FISCALI"/>
+			<xs:enumeration value="IN_ELABORAZIONE"/>
+			<xs:enumeration value="IN_LAVORAZIONE"/>
+			<xs:enumeration value="NON_ACCETTATO"/>
+			<xs:enumeration value="NON_ANNULLABILE"/>
+			<xs:enumeration value="NON_CONGRUO"/>
+			<xs:enumeration value="NON_CONSEGNABILE"/>
+			<xs:enumeration value="NON_CONSEGNATO"/>
+			<xs:enumeration value="NON_CONSEGNATO_NSO"/>
+			<xs:enumeration value="NON_INVIATO_BUSDOX"/>
+			<xs:enumeration value="NON_INVIATO_NSO"/>
+			<xs:enumeration value="NON_VALIDO"/>
+			<xs:enumeration value="NOTIFICATO_A_SDI"/>
+			<xs:enumeration value="NOTIFICATO_DA_SDI"/>
+			<xs:enumeration value="RECAPITATO"/>
+			<xs:enumeration value="RICEVUTO_NSO"/>
+			<xs:enumeration value="SCARTATO"/>
+			<xs:enumeration value="SCARTATO_NSO"/>
+			<xs:enumeration value="TEMPORANEO_INBOUND"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax254Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="254"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax70Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="70"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax50Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax10Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax1024Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1024"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TokenNVMax4096Type">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="4096"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TipoDocumentoType">
+		<xs:restriction base="xs:NMTOKEN">
+			<!-- DOCUMENTI UBL -->
+			<xs:enumeration value="FATTURA"/>
+			<xs:enumeration value="NOTA_DI_CREDITO"/>
+			<xs:enumeration value="DOCUMENTO_DI_TRASPORTO"/>
+			<xs:enumeration value="ORDINE"/>
+			<!-- RICEVUTE PEPPOL -->
+			<xs:enumeration value="NOTIFICA_MDN"/>
+			<!-- RICEVUTE SDI -->
+			<xs:enumeration value="NOTIFICA_DI_SCARTO"/>
+			<xs:enumeration value="RICEVUTA_DI_CONSEGNA"/>
+			<xs:enumeration value="NOTIFICA_DI_MANCATA_CONSEGNA"/>
+			<xs:enumeration value="NOTIFICA_DI_ESITO_COMMITTENTE"/>
+			<xs:enumeration value="NOTIFICA_DI_ESITO_CEDENTE"/>
+			<xs:enumeration value="NOTIFICA_SCARTO_ESITO_COMMITTENTE"/>
+			<xs:enumeration value="NOTIFICA_DI_DECORRENZA_TERMINI"/>
+			<xs:enumeration value="ATTESTAZIONE_DI_FILE_NON_RECAPITABILE"/>
+			<xs:enumeration value="NOTIFICA_METADATI_FILE_FATTURA"/>
+			<!-- RICEVUTE PARER -->
+			<xs:enumeration value="ESITO_CONSERVAZIONE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="IntMax4DgtType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="9999"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
+
+=== Interrogazione Peppol Directory
+
+L'XSD riportato in questo paragrafo fa riferimento alla _response XML_ di interrogazione su _Peppol Directory_.
+
+
+[literal]
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+   <xs:element name="Anagrafica">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="Esito">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element type="xs:string" name="CodiceErrore" />
+                     <xs:element type="xs:string" name="CodiceEsito" />
+                     <xs:element type="xs:string" name="DescrizioneErrore" />
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="lista">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="listaAziende">
+                        <xs:complexType>
+                           <xs:sequence>
+                              <xs:element name="Azi" maxOccurs="unbounded" minOccurs="0">
+                                 <xs:complexType>
+                                    <xs:sequence>
+                                       <xs:element type="xs:string" name="ParticipantId" />
+                                       <xs:element type="xs:string" name="cf" />
+                                       <xs:element type="xs:string" name="piva" />
+                                       <xs:element type="xs:string" name="ragSoc" />
+                                    </xs:sequence>
+                                 </xs:complexType>
+                              </xs:element>
+                           </xs:sequence>
+                        </xs:complexType>
+                     </xs:element>
+                     <xs:element type="xs:int" name="numeroAziende" />
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>
+
+=== Notifica MDN
+
+L’XSD riportato in questo paragrafo fa riferimento alla costruzione della notifica MDN da parte di NoTI-ER, messa a disposizione dei suoi iscritti.
+
+[literal]
+<?xml version="1.0" encoding="UTF-8"?>
+<xsi:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema"
+			xmlns="http://notier.intercenter.rer.it/services/1.0/notificaMDN"
+			targetNamespace="http://notier.intercenter.rer.it/services/1.0/notificaMDN"
+			elementFormDefault="qualified" version="1.1">
+<!-- xmlns="http://notier.intercenter.rer.it/services/1.0/notificaMDN"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://notier.intercenter.rer.it/services/1.0/notificaMDN" -->
+	<xsi:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
+	<xsi:element name="NotificaMDN" type="NotificaMDN_Type" />
+	<xsi:complexType name="NotificaMDN_Type">
+		<xsi:sequence>
+			<xsi:element name="Esito" type="Esito_Type" />
+			<xsi:element name="Versione" type="Versione_Type"/>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:simpleType name="Versione_Type">
+		<xsi:restriction base="xsi:string">
+			<xsi:maxLength value="5"/>
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:complexType name="Esito_Type">
+		<xsi:sequence>
+			<xsi:element name="Documento" type="IdentificativoDocumento_Type" />
+			<xsi:element name="EsitoMDN" type="IdentificativoTrasmissione_Type" minOccurs="1"
+						 maxOccurs="1"/>
+			<xsi:element name="EsitoTrasmissione" type="EsitoTrasmissione_Type" />
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:complexType name="DataOraTransitoDocumento_Type">
+		<xsi:sequence>
+			<xsi:element name="DataInvioSuPeppol" type="Data_Type" minOccurs="0" maxOccurs="1"/>
+			<xsi:element name="OrarioInvioSuPeppol" type="Orario_Type" minOccurs="0" maxOccurs="1"/>
+		</xsi:sequence>
+	</xsi:complexType>
+    <xsi:complexType name="EsitoTrasmissione_Type">
+		<xsi:sequence>
+			<xsi:element name="CodiceEsito" type="CodiceEsito_Type" minOccurs="1"
+					maxOccurs="1" />
+			<xsi:element name="DescrizioneErrore" type="DescrizioneErrore_Type" minOccurs="0"/>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:simpleType name="CodiceEsito_Type">
+		<xsi:restriction base="xsi:string">
+			<xsi:enumeration value="OK">
+				<xsi:annotation>
+					<xsi:documentation>
+						OK
+					</xsi:documentation>
+				</xsi:annotation>
+			</xsi:enumeration>
+			<xsi:enumeration value="KO">
+				<xsi:annotation>
+					<xsi:documentation>
+						KO
+					</xsi:documentation>
+				</xsi:annotation>
+			</xsi:enumeration>
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:simpleType name="DescrizioneErrore_Type">
+		<xsi:restriction base="xsi:string">
+			<xsi:minLength value="0" />
+			<xsi:maxLength value="1000" />
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:complexType name="IdentificativoDocumento_Type">
+		<xsi:sequence>
+			<xsi:element name="Urn" type="Urn_Type" />
+			<xsi:element name="NumeroDocumento" type="NumeroDocumento_Type" />
+			<xsi:element name="RecipientID" type="RecipientID_Type"/>
+			<xsi:element name="DocumentID" type="DocumentID_Type"/>
+			<xsi:element name="RiferimentoTemporale" type="DataOraTransitoDocumento_Type" minOccurs="0" maxOccurs="1"/>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:simpleType name="NumeroDocumento_Type">
+		<xsi:restriction base="xsi:string">
+			<xsi:minLength value="0"/>
+			<xsi:maxLength value="50"/>
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:simpleType name="Urn_Type">
+		<xsi:restriction base="xsi:string">
+			<xsi:minLength value="0" />
+			<xsi:maxLength value="256" />
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:simpleType name="RecipientID_Type">
+		<xsi:restriction base="xsi:string">
+			<xsi:minLength value="0" />
+			<xsi:maxLength value="256" />
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:simpleType name="DocumentID_Type">
+		<xsi:restriction base="xsi:string">
+			<xsi:minLength value="0" />
+			<xsi:maxLength value="1000" />
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:complexType name="IdentificativoTrasmissione_Type">
+		<xsi:sequence>
+			<xsi:element name="TransmissionID" type="TransmissionID_Type" />
+			<xsi:element name="MessageID" type="MessageID_Type"/>
+		</xsi:sequence>
+	</xsi:complexType>
+	<xsi:simpleType name="TransmissionID_Type">
+		<xsi:restriction base="xsi:string">
+			<xsi:minLength value="0" />
+			<xsi:maxLength value="256" />
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:simpleType name="MessageID_Type">
+		<xsi:restriction base="xsi:string">
+			<xsi:minLength value="0" />
+			<xsi:maxLength value="256" />
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:simpleType name="Data_Type">
+		<xsi:restriction base="xsi:string">
+			<xsi:length value="10"/>
+		</xsi:restriction>
+	</xsi:simpleType>
+	<xsi:simpleType name="Orario_Type">
+		<xsi:restriction base="xsi:string">
+			<xsi:length value="8"/>
+		</xsi:restriction>
+	</xsi:simpleType>
+</xsi:schema>

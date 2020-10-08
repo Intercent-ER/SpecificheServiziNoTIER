@@ -1,0 +1,1717 @@
+== Appendice A. Esempi di invocazioni e risposte dei servizi di NoTi-ER
+(((Appendice A. Esempi di invocazione dei servizi di NoTi-ER)))
+
+=== A.1. Invio di un documento di tipo _fattura_ a SdI con esito positivo
+
+La request da inviare a NoTI-ER deve essere impostata così come descritto nel paragrafo 4.3. +
+Gli allegati devono comprendere un file dei metadati e un file del documento.
+
+Le specifiche tecniche, i tracciati XML e tutte le indicazioni necessarie per la formazione di un qualsiasi documento semanticamente e sintatticamente corretto sono disponibili su	 https://intercenter.regione.emilia-romagna.it/noti-er-fatturazione-elettronica/specifiche-tecniche e su https://notier.regione.emilia-romagna.it/docs.
+
+==== A.1.1. File XML dei metadati di invio _fattura UBL_
+
+[literal]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<InvioDocumento xmlns="http://notier.intercenter.rer.it/services/1.0/inviodocumento/request">
+	<Versione>1.0</Versione>
+	<Documento>
+		<Chiave>
+			<Mittente>Uff_test_AP_to_AP</Mittente>
+			<TipoMittente>NOTIER</TipoMittente>
+			<Anno>2020</Anno>
+			<Numero>240620_FAT_01</Numero>
+			<TipoDocumento>FATTURA</TipoDocumento>
+		</Chiave>
+		<Rappresentazione>
+			<Formato>UBL</Formato>
+			<Versione>2.1</Versione>
+		</Rappresentazione>
+	</Documento>
+	<Configurazione>
+		<InvioSdi>true</InvioSdi>
+		<InvioPeppol>false</InvioPeppol>
+		<InvioConservazione>true</InvioConservazione>
+		<ApprovazioneAutomatica>true</ApprovazioneAutomatica>
+		<AccettaChiaveDuplicata>true</AccettaChiaveDuplicata>
+	</Configurazione>
+	<Integrazione>
+		<Registro>5</Registro>
+	</Integrazione>
+</InvioDocumento>
+
+==== A.1.2. File XML di una _fattura UBL_
+
+[literal]
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet type="text/xsl" href="../xsl/Invoice-IT.xsl"?>
+<tns:Invoice xmlns:tns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:cr="http://www.ubl-italia.org/ns/CrossReference">
+	<ext:UBLExtensions>
+		<ext:UBLExtension xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:cr="http://www.ubl-italia.org/ns/CrossReference">
+			<ext:ExtensionURI>urn:www.ubl-italia.org:spec:fatturapa:xref:modalita_pagamento</ext:ExtensionURI>
+			<ext:ExtensionContent>
+				<cr:XCode>MP05</cr:XCode>
+			</ext:ExtensionContent>
+		</ext:UBLExtension>
+		<ext:UBLExtension>
+			<ext:ExtensionURI>urn:www.ubl-italia.org:spec:fatturapa:esigibilita_iva</ext:ExtensionURI>
+			<ext:ExtensionContent>
+				<cbc:TaxTypeCode>S</cbc:TaxTypeCode>
+			</ext:ExtensionContent>
+		</ext:UBLExtension>
+	</ext:UBLExtensions>
+	<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+	<cbc:CustomizationID>urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0</cbc:CustomizationID>
+	<cbc:ProfileID>urn:www.cenbii.eu:profile:bii05:ver2.0</cbc:ProfileID>
+	<cbc:ID>240620_FAT_01</cbc:ID>
+	<cbc:IssueDate>2018-10-01</cbc:IssueDate>
+	<cbc:InvoiceTypeCode listID="UNCL1001">380</cbc:InvoiceTypeCode>
+	<cbc:DocumentCurrencyCode listID="ISO4217">EUR</cbc:DocumentCurrencyCode>
+	<cac:AccountingSupplierParty>
+		<cac:Party>
+			<cac:PartyName>
+				<cbc:Name>Rehabilitation Institute.</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Via Pascoli</cbc:StreetName>
+				<cbc:CityName>IMOLA</cbc:CityName>
+				<cbc:PostalZone>40026</cbc:PostalZone>
+				<cbc:CountrySubentity>BO</cbc:CountrySubentity>
+				<cac:Country>
+					<cbc:IdentificationCode listID="ISO3166-1:Alpha2">IT</cbc:IdentificationCode>
+					<cbc:Name>Italy</cbc:Name>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID schemeID="IT:VAT">IT01789031208</cbc:CompanyID>
+				<cbc:ExemptionReason>RF01</cbc:ExemptionReason>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:Contact>
+				<cbc:Telephone>0542/000000</cbc:Telephone>
+				<cbc:Telefax>0542/000000</cbc:Telefax>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+		<cac:Party>
+			<cac:PartyIdentification>
+				<cbc:ID schemeID="IT:IPA">RER000</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>AZIENDA USL</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>VIALE PEPOLI</cbc:StreetName>
+				<cbc:CityName>IMOLA</cbc:CityName>
+				<cbc:PostalZone>40026</cbc:PostalZone>
+				<cbc:CountrySubentity>BO</cbc:CountrySubentity>
+				<cac:Country>
+					<cbc:IdentificationCode listID="ISO3166-1:Alpha2">IT</cbc:IdentificationCode>
+					<cbc:Name>Italy</cbc:Name>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID schemeID="IT:VAT">IT000000000</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:PaymentMeans>
+		<cbc:PaymentMeansCode listID="UNCL4461">70</cbc:PaymentMeansCode>
+		<cbc:PaymentDueDate>2019-03-31</cbc:PaymentDueDate>
+		<cbc:PaymentChannelCode>LOCAL</cbc:PaymentChannelCode>
+		<cac:PayeeFinancialAccount>
+			<cac:FinancialInstitutionBranch>
+				<cbc:ID schemeID="CAB">000000</cbc:ID>
+				<cac:FinancialInstitution>
+					<cbc:ID schemeID="ABI">00000</cbc:ID>
+					<cbc:Name>BANCO POPOLARE SOC. COOP. SASSUOLO</cbc:Name>
+				</cac:FinancialInstitution>
+			</cac:FinancialInstitutionBranch>
+		</cac:PayeeFinancialAccount>
+	</cac:PaymentMeans>
+	<cac:TaxTotal>
+		<cbc:TaxAmount currencyID="EUR">56.00</cbc:TaxAmount>
+		<cac:TaxSubtotal>
+			<cbc:TaxableAmount currencyID="EUR">560.00</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="EUR">56.00</cbc:TaxAmount>
+			<cac:TaxCategory>
+				<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+				<cbc:Percent>10.00</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:TaxCategory>
+		</cac:TaxSubtotal>
+	</cac:TaxTotal>
+	<cac:LegalMonetaryTotal>
+		<cbc:LineExtensionAmount currencyID="EUR">560.00</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="EUR">560.00</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="EUR">616.00</cbc:TaxInclusiveAmount>
+		<cbc:PayableAmount currencyID="EUR">616.00</cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+	<cac:InvoiceLine>
+		<cbc:ID>1</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62" unitCodeListID="UNECERec20">1</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">560.00</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>COPIA LASTRE SU CD</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>130</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID schemeID="UNCL5305">S</cbc:ID>
+				<cbc:Percent>10.00</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">560.00</cbc:PriceAmount>
+		</cac:Price>
+	</cac:InvoiceLine>
+</tns:Invoice>
+
+==== A.1.3. File XML di esito invio documento (positivo con WARN)
+
+[literal]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<EsitoRichiesta xmlns="http://notier.intercenter.rer.it/services/1.0/esito/response">
+	<Versione>1.0</Versione>
+	<Esito>
+		<CodiceEsito>WARN</CodiceEsito>
+		<DescrizioneErrore>[EUGEN-T10-R039]-A supplier SHOULD provide information about its legal entity information[EUGEN-T10-R040]-A customer SHOULD provide information about its legal entity information</DescrizioneErrore>
+	</Esito>
+	<Documento>
+		<Urn>urn:notier:Uff_test_AP_to_AP:2020:240620_5fFAT_5f01:CA:FATTURA</Urn>
+		<DataRicezioneNotier>2020-06-24T10:38:05.409+02:00</DataRicezioneNotier>
+		<Chiave>
+			<Mittente>Uff_test_AP_to_AP</Mittente>
+			<TipoMittente>NOTIER</TipoMittente>
+			<Anno>2020</Anno>
+			<Numero>240620_FAT_01</Numero>
+			<TipoDocumento>FATTURA</TipoDocumento>
+		</Chiave>
+		<Rappresentazione>
+			<Formato>UBL</Formato>
+			<Versione>2.1</Versione>
+		</Rappresentazione>
+	</Documento>
+</EsitoRichiesta>
+
+
+=== A.2. Invio di un _ordine_ a Peppol con esito positivo
+
+==== A.2.1. File XML dei metadati di invio _orsine BIS_3_
+
+[literal]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<InvioDocumento xmlns="http://notier.intercenter.rer.it/services/1.0/inviodocumento/request">
+	<Versione>1.0</Versione>
+	<Documento>
+		<Chiave>
+			<Mittente>EENGRER_71_TestEvolutivaBI</Mittente>
+			<TipoMittente>NOTIER</TipoMittente>
+			<Anno>2020</Anno>
+			<Numero>290620_ITA_3_2</Numero>
+			<TipoDocumento>ORDINE</TipoDocumento>
+		</Chiave>
+		<Rappresentazione>
+			<Formato>BIS_3</Formato>
+			<Versione>2.1</Versione>
+		</Rappresentazione>
+	</Documento>
+	<Configurazione>
+		<InvioSdi>false</InvioSdi>
+		<InvioPeppol>true</InvioPeppol>
+		<InvioConservazione>true</InvioConservazione>
+		<ApprovazioneAutomatica>false</ApprovazioneAutomatica>
+		<AccettaChiaveDuplicata>true</AccettaChiaveDuplicata>
+	</Configurazione>
+	<MetadatiBusdox>
+		<RecipientIdentifier>0201:testap</RecipientIdentifier>
+		<SenderIdentifier>9906:it01234563390</SenderIdentifier>
+		<DocumentIdentifier>urn:oasis:names:specification:ubl:schema:xsd:Order-2::Order##urn:fdc:peppol.eu:poacc:trns:order:3:restrictive:urn:www.agid.gov.it:trns:ordine:3.1::2.1</DocumentIdentifier>
+		<ProcessIdentifier>urn:fdc:peppol.eu:poacc:bis:order_only:3</ProcessIdentifier>
+	</MetadatiBusdox>
+</InvioDocumento>
+
+==== A.2.2. File XML di un _ordine BIS_3_
+
+[literal]
+<?xml version="1.0" encoding="UTF-8"?>
+<ns4:Order xmlns:ns2="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ns4="urn:oasis:names:specification:ubl:schema:xsd:Order-2" xmlns:ns3="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+  <CustomizationID>urn:fdc:peppol.eu:poacc:trns:order:3:restrictive:urn:www.agid.gov.it:trns:ordine:3.1</CustomizationID>
+  <ProfileID>urn:fdc:peppol.eu:poacc:bis:order_only:3</ProfileID>
+  <ID>290620_ITA_3_1</ID>
+  <IssueDate>2020-12-31</IssueDate>
+  <OrderTypeCode listID="UNCL1001">220</OrderTypeCode>
+  <Note>MATERIALE DA FATTURARE DA C/DEPOSITO - INTERVENTO DEL 05/02/2019</Note>
+  <DocumentCurrencyCode listID="ISO4217">EUR</DocumentCurrencyCode>
+  <ns3:ValidityPeriod>
+    <EndDate>2020-03-06</EndDate>
+  </ns3:ValidityPeriod>
+  <ns3:OriginatorDocumentReference>
+    <ID>2959947189</ID>
+  </ns3:OriginatorDocumentReference>
+  <ns3:Contract>
+    <ID>ECONOMIA 2019 FOLIGNO</ID>
+  </ns3:Contract>
+  <ns3:BuyerCustomerParty>
+    <ns3:Party>
+      <EndpointID schemeID="0201">TESTAP</EndpointID>
+      <ns3:PartyName>
+        <Name>URN-NOTIER-1</Name>
+      </ns3:PartyName>
+      <ns3:PostalAddress>
+        <StreetName>VIA, 3</StreetName>
+        <CityName>RAVENNA</CityName>
+        <PostalZone>48121</PostalZone>
+        <CountrySubentity>RA</CountrySubentity>
+        <ns3:Country>
+          <IdentificationCode listID="ISO3166-1:Alpha2">IT</IdentificationCode>
+        </ns3:Country>
+      </ns3:PostalAddress>
+      <ns3:PartyTaxScheme>
+        <CompanyID>IT00000000000</CompanyID>
+        <ns3:TaxScheme>
+          <ID>VAT</ID>
+        </ns3:TaxScheme>
+      </ns3:PartyTaxScheme>
+      <ns3:PartyLegalEntity>
+        <RegistrationName>AZIENDA USL</RegistrationName>
+      </ns3:PartyLegalEntity>
+      <ns3:Contact>
+        <Name>Alessandro Mencarelli</Name>
+        <Telephone>0543/000000</Telephone>
+        <ElectronicMail>terapia@ausl.it</ElectronicMail>
+      </ns3:Contact>
+    </ns3:Party>
+  </ns3:BuyerCustomerParty>
+  <ns3:SellerSupplierParty>
+    <ns3:Party>
+      <EndpointID schemeID="9906">01234563390</EndpointID>
+      <ns3:PartyName>
+        <Name>NOTIER</Name>
+      </ns3:PartyName>
+      <ns3:PostalAddress>
+        <StreetName>PIAZZALE, 20</StreetName>
+        <CityName>ROMA</CityName>
+        <PostalZone>00144</PostalZone>
+        <CountrySubentity>RM</CountrySubentity>
+        <ns3:Country>
+          <IdentificationCode listID="ISO3166-1:Alpha2">IT</IdentificationCode>
+        </ns3:Country>
+      </ns3:PostalAddress>
+      <ns3:PartyLegalEntity>
+        <RegistrationName>B.S.P.A</RegistrationName>
+      </ns3:PartyLegalEntity>
+    </ns3:Party>
+  </ns3:SellerSupplierParty>
+  <ns3:AccountingCustomerParty>
+    <ns3:Party>
+      <ns3:PartyName>
+        <Name>AZIENDA USL</Name>
+      </ns3:PartyName>
+      <ns3:PostalAddress>
+        <StreetName>VIA DE GASPERIZZZ, 8</StreetName>
+        <CityName>RAVENNA</CityName>
+        <PostalZone>48121</PostalZone>
+        <CountrySubentity>RA</CountrySubentity>
+        <ns3:Country>
+          <IdentificationCode listID="ISO3166-1:Alpha2">IT</IdentificationCode>
+        </ns3:Country>
+      </ns3:PostalAddress>
+      <ns3:PartyLegalEntity>
+        <RegistrationName>AZIENDA USL</RegistrationName>
+      </ns3:PartyLegalEntity>
+    </ns3:Party>
+  </ns3:AccountingCustomerParty>
+  <ns3:Delivery>
+    <ns3:DeliveryLocation>
+      <ID>Consegna Domiciliare</ID>
+      <Name>CASA DI MARCO</Name>
+      <ns3:Address>
+        <StreetName>VIA Celle</StreetName>
+        <AdditionalStreetName>CASA DI MARCO</AdditionalStreetName>
+        <CityName>SCANDIANO</CityName>
+        <PostalZone>42019</PostalZone>
+        <CountrySubentity>RE</CountrySubentity>
+        <ns3:AddressLine>
+          <Line>Interno 1 (Marco)</Line>
+        </ns3:AddressLine>
+        <ns3:Country>
+          <IdentificationCode listID="ISO3166-1:Alpha2">IT</IdentificationCode>
+        </ns3:Country>
+      </ns3:Address>
+    </ns3:DeliveryLocation>
+    <ns3:RequestedDeliveryPeriod>
+      <EndDate>2020-01-30</EndDate>
+    </ns3:RequestedDeliveryPeriod>
+  </ns3:Delivery>
+  <ns3:PaymentTerms>
+    <Note>CONDIZIONI DI FORNITURA:   consegna porto franco, imballo gratuito; garanzia </Note>
+  </ns3:PaymentTerms>
+  <ns3:TaxTotal>
+    <TaxAmount currencyID="EUR">44.00</TaxAmount>
+  </ns3:TaxTotal>
+  <ns3:AnticipatedMonetaryTotal>
+    <LineExtensionAmount currencyID="EUR">1100.00</LineExtensionAmount>
+    <TaxExclusiveAmount currencyID="EUR">1100.00</TaxExclusiveAmount>
+    <TaxInclusiveAmount currencyID="EUR">1144.00</TaxInclusiveAmount>
+    <PayableAmount currencyID="EUR">1144.00</PayableAmount>
+  </ns3:AnticipatedMonetaryTotal>
+  <ns3:OrderLine>
+    <ns3:LineItem>
+      <ID>10</ID>
+      <Quantity unitCodeListID="UNECERec20" unitCode="C62">1</Quantity>
+      <LineExtensionAmount currencyID="EUR">1100.00</LineExtensionAmount>
+      <AccountingCost>FOHD507471</AccountingCost>
+      <ns3:Price>
+        <PriceAmount currencyID="EUR">1100.00</PriceAmount>
+      </ns3:Price>
+      <ns3:Item>
+        <Description>PER-LOTTO SP16K02-1194041 BOLLA N.80000 DEL 13/06/2017</Description>
+        <Name>PATCH VASC BIO PERICARDIO_ (Codice FO000000)</Name>
+        <ns3:SellersItemIdentification>
+          <ID>PC-1225N</ID>
+        </ns3:SellersItemIdentification>
+        <ns3:CommodityClassification>
+          <ItemClassificationCode listVersionID="UNCL7143" listID="STL">S01L</ItemClassificationCode>
+        </ns3:CommodityClassification>
+        <ns3:ClassifiedTaxCategory>
+          <ID schemeID="UNCL5305">S</ID>
+          <Percent>4</Percent>
+          <ns3:TaxScheme>
+            <ID>VAT</ID>
+          </ns3:TaxScheme>
+        </ns3:ClassifiedTaxCategory>
+        <ns3:AdditionalItemProperty>
+          <Name>PackSizeNumeric</Name>
+          <Value>1</Value>
+        </ns3:AdditionalItemProperty>
+      </ns3:Item>
+    </ns3:LineItem>
+  </ns3:OrderLine>
+</ns4:Order>
+
+==== A.2.3. File XML di esito invio documento positivo
+
+[literal]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<EsitoRichiesta xmlns="http://notier.intercenter.rer.it/services/1.0/esito/response">
+	<Versione>1.0</Versione>
+	<Esito>
+		<CodiceEsito>OK</CodiceEsito>
+	</Esito>
+	<Documento>
+		<Urn>urn:notier:EENGRER_71_TestEvolutivaBI:2020:290620_5fITA_5f3_5f2:CA:ORDINE:01</Urn>
+		<DataRicezioneNotier>2020-06-29T10:37:26.544+02:00</DataRicezioneNotier>
+		<Chiave>
+			<Mittente>EENGRER_71_TestEvolutivaBI</Mittente>
+			<TipoMittente>NOTIER</TipoMittente>
+			<Anno>2020</Anno>
+			<Numero>290620_ITA_3_2</Numero>
+			<TipoDocumento>ORDINE</TipoDocumento>
+		</Chiave>
+		<Rappresentazione>
+			<Formato>BIS_3</Formato>
+			<Versione>2.1</Versione>
+		</Rappresentazione>
+	</Documento>
+</EsitoRichiesta>
+
+=== A.3. Invio di un _documento di trasporto_ a Peppol con esito negativo
+
+==== A.3.1. File XML dei metadati di invio _DDT BIS_3_
+
+[literal]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<InvioDocumento xmlns="http://notier.intercenter.rer.it/services/1.0/inviodocumento/request">
+	<Versione>1.0</Versione>
+	<Documento>
+		<Chiave>
+			<Mittente>EENGRER_73_TestAcquisizion</Mittente>
+			<TipoMittente>NOTIER</TipoMittente>
+			<Anno>2020</Anno>
+			<Numero>280720_DDT_COUNT_1</Numero>
+			<TipoDocumento>DOCUMENTO_DI_TRASPORTO</TipoDocumento>
+		</Chiave>
+		<Rappresentazione>
+			<Formato>BIS_3</Formato>
+			<Versione>2.1</Versione>
+		</Rappresentazione>
+	</Documento>
+	<Configurazione>
+		<InvioSdi>false</InvioSdi>
+		<InvioPeppol>true</InvioPeppol>
+		<InvioConservazione>false</InvioConservazione>
+		<ApprovazioneAutomatica>true</ApprovazioneAutomatica>
+		<AccettaChiaveDuplicata>true</AccettaChiaveDuplicata>
+	</Configurazione>
+	<Integrazione>
+		<Registro>DDT_A</Registro>
+	</Integrazione>
+	<MetadatiBusdox>
+		<RecipientIdentifier>0201:testap</RecipientIdentifier>
+		<SenderIdentifier>0201:TDDTB3</SenderIdentifier>
+		<DocumentIdentifier>urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2::DespatchAdvice##urn:fdc:peppol.eu:poacc:trns:despatch_advice:3:extended:urn:www.agid.gov.it:trns:ddt:3.1::2.1</DocumentIdentifier>
+		<ProcessIdentifier>urn:fdc:peppol.eu:poacc:bis:despatch_advice:3</ProcessIdentifier>
+	</MetadatiBusdox>
+</InvioDocumento>
+
+
+==== A.3.2. File XML di un _documento di trasporto BIS_3_
+
+[literal]
+<?xml version="1.0" encoding="UTF-8"?>
+<DespatchAdvice xmlns="urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2"
+	xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+	xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+	<cbc:CustomizationID>urn:fdc:peppol.eu:poacc:trns:despatch_advice:3:extended:urn:www.agid.gov.it:trns:ddt:3.1</cbc:CustomizationID>
+	<cbc:ProfileID>urn:fdc:peppol.eu:poacc:bis:despatch_advice:3</cbc:ProfileID>
+	<cbc:ID>280720_DDT_COUNT_2</cbc:ID>
+	<cbc:IssueDate>2014-08-28</cbc:IssueDate>
+	<cbc:Note>BOLLA</cbc:Note>
+	<cac:OrderReference>
+		<cbc:ID>CE/2</cbc:ID>
+	</cac:OrderReference>
+	<cac:DespatchSupplierParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="0201">TDDTB3</cbc:EndpointID>
+			<cac:PostalAddress>
+				<cbc:StreetName>Via Lucio Dalla 1</cbc:StreetName>
+				<cbc:CityName>Bologna</cbc:CityName>
+				<cbc:PostalZone>40121</cbc:PostalZone>
+				<cbc:CountrySubentity>Bologna</cbc:CountrySubentity>
+				<cac:Country>
+					<cbc:IdentificationCode>IT</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Group</cbc:RegistrationName>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Name>Deposito Logistica Integrata</cbc:Name>
+				<cbc:Telephone>029506981</cbc:Telephone>
+			</cac:Contact>
+		</cac:Party>
+	</cac:DespatchSupplierParty>
+	<cac:DeliveryCustomerParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="0201">TD2TB3</cbc:EndpointID>
+			<cac:PostalAddress>
+				<cbc:StreetName>Via De Gasperi, 8</cbc:StreetName>
+				<cbc:AdditionalStreetName>Destinatario</cbc:AdditionalStreetName>
+				<cbc:CityName>Ravenna</cbc:CityName>
+				<cbc:PostalZone>48121</cbc:PostalZone>
+				<cbc:CountrySubentity>RA</cbc:CountrySubentity>
+				<cac:Country>
+					<cbc:IdentificationCode>IT</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Azienda Ausl</cbc:RegistrationName>
+			</cac:PartyLegalEntity>
+		</cac:Party>
+		<cac:DeliveryContact>
+			<cbc:Name>Magazzino Unico di Area Vasta</cbc:Name>
+			<cbc:Telephone>0540000000</cbc:Telephone>
+		</cac:DeliveryContact>
+	</cac:DeliveryCustomerParty>
+	<cac:BuyerCustomerParty>
+		<cac:Party>
+			<cac:PartyIdentification>
+				<cbc:ID>IT:CF:00000000000</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>Azienda Ausl</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Via Napoli 1</cbc:StreetName>
+				<cbc:CityName>Milano</cbc:CityName>
+				<cbc:PostalZone>20100</cbc:PostalZone>
+				<cbc:CountrySubentity>MI</cbc:CountrySubentity>
+				<cac:Country>
+					<cbc:IdentificationCode>IT</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+		</cac:Party>
+	</cac:BuyerCustomerParty>
+	<cac:SellerSupplierParty>
+		<cac:Party>
+			<cac:PartyIdentification>
+				<cbc:ID>IT:VAT:IT001111111</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>FIDIA FARMACEUTICI S.p.A</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Via Napoli 1</cbc:StreetName>
+				<cbc:CityName>Milano</cbc:CityName>
+				<cbc:PostalZone>20100</cbc:PostalZone>
+				<cbc:CountrySubentity>MI</cbc:CountrySubentity>
+				<cac:Country>
+					<cbc:IdentificationCode>IT</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+		</cac:Party>
+	</cac:SellerSupplierParty>
+	<cac:OriginatorCustomerParty>
+		<cac:Party>
+			<cac:PartyIdentification>
+				<cbc:ID>IT:CF:11111111111</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>Magazzino Unico</cbc:Name>
+			</cac:PartyName>
+		</cac:Party>
+	</cac:OriginatorCustomerParty>
+	<cac:Shipment>
+		<cbc:ID>STM 0000000000</cbc:ID>
+		<cbc:Information>Vendita</cbc:Information>
+		<cbc:GrossWeightMeasure unitCode="KGM">165.440</cbc:GrossWeightMeasure>
+		<cbc:TotalTransportHandlingUnitQuantity>22</cbc:TotalTransportHandlingUnitQuantity>
+		<cac:Consignment>
+			<cbc:ID>STM 0001946113</cbc:ID>
+			<cbc:Information>Porto Franco</cbc:Information>
+			<cac:CarrierParty>
+				<cac:PartyIdentification>
+					<cbc:ID>IT:VAT:IT000000000</cbc:ID>
+				</cac:PartyIdentification>
+				<cac:PartyName>
+					<cbc:Name>EURODIFARM SRL</cbc:Name>
+				</cac:PartyName>
+				<cac:PostalAddress>
+					<cbc:StreetName>Via Europa 100</cbc:StreetName>
+					<cbc:AdditionalStreetName>Palazzo A</cbc:AdditionalStreetName>
+					<cbc:CityName>Bologna</cbc:CityName>
+					<cbc:PostalZone>40121</cbc:PostalZone>
+					<cbc:CountrySubentity>Bologna</cbc:CountrySubentity>
+					<cac:Country>
+						<cbc:IdentificationCode>IT</cbc:IdentificationCode>
+					</cac:Country>
+				</cac:PostalAddress>
+			</cac:CarrierParty>
+		</cac:Consignment>
+	</cac:Shipment>
+	<cac:DespatchLine>
+		<cbc:ID>1</cbc:ID>
+		<cbc:DeliveredQuantity unitCode="NAR">960</cbc:DeliveredQuantity>
+		<cac:OrderLineReference>
+			<cbc:LineID>1</cbc:LineID>
+			<cac:OrderReference>
+				<cbc:ID>CE/k</cbc:ID>
+			</cac:OrderReference>
+		</cac:OrderLineReference>
+		<cac:DocumentReference>
+			<cbc:ID>5600000FAA</cbc:ID>
+			<cbc:DocumentType>CIG</cbc:DocumentType>
+		</cac:DocumentReference>
+		<cac:Item>
+			<cbc:Name>CONNETTIVINA CREMA PLUS 25G</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>101500H</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:StandardItemIdentification>
+				<cbc:ID schemeID="0160">028440030</cbc:ID>
+			</cac:StandardItemIdentification>
+			<cac:ItemInstance>
+				<!--Lotto-->
+				<cac:LotIdentification>
+					<cbc:LotNumberID>126200</cbc:LotNumberID>
+					<cbc:ExpiryDate>2017-06-30</cbc:ExpiryDate>
+				</cac:LotIdentification>
+			</cac:ItemInstance>
+		</cac:Item>
+	</cac:DespatchLine>
+</DespatchAdvice>
+
+
+==== A.3.3. File XML di esito invio documento negativo
+
+[literal]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<EsitoRichiesta xmlns="http://notier.intercenter.rer.it/services/1.0/esito/response">
+    <Versione>1.0</Versione>
+    <Esito>
+        <CodiceEsito>KO</CodiceEsito>
+        <CodiceErrore>ERR-INVIODOC-009-DOC-DUPLICATO</CodiceErrore>
+        <DescrizioneErrore>DocDuplicatoException: Documento identico gia' presente in NoTIER e non sovrascrivibile</DescrizioneErrore>
+    </Esito>
+</EsitoRichiesta>
+
+=== A.4. Recupero lista documenti
+
+==== A.4.1. Query string di invocazione
+
+[literal]
+GET https://notier.regione.emilia-romagna.it:8443/notier/rest/v1.0/documenti/recupero?idnotier=EENGRER_73_TestAcquisizion&data_inizio=01072020
+
+==== A.4.2. File XML di risposta con esito positivo
+
+[literal]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<EsitoRichiesta xmlns="http://notier.intercenter.rer.it/services/1.0/esito/response">
+    <Versione>1.0</Versione>
+    <Esito>
+        <CodiceEsito>OK</CodiceEsito>
+    </Esito>
+    <ListaDocumenti>
+        <TotaleDocumentiScaricabili>6</TotaleDocumentiScaricabili>
+        <NumeroDocumenti>6</NumeroDocumenti>
+        <Documenti>
+            <Documento>
+                <Destinatario>EENGRER_73_TestAcquisizion</Destinatario>
+                <Urn>urn:notier:EENGRER_73_TestAcquisizion:2020:140920_ddt3_romagna_1:CA:NOTIFICA_MDN</Urn>
+                <DataRicezioneNotier>2020-09-14T15:48:04.000+02:00</DataRicezioneNotier>
+                <UrnCollegato>urn:notier:EENGRER_73_TestAcquisizion:2020:140920_5fddt3_5fromagna_5f1:CA:DOCUMENTO_DI_TRASPORTO:01</UrnCollegato>
+                <StatoGiacenza>DA_RECAPITARE</StatoGiacenza>
+                <Chiave>
+                    <Mittente>EENGRER_73_TestAcquisizion</Mittente>
+                    <TipoMittente>NOTIER</TipoMittente>
+                    <Anno>2020</Anno>
+                    <Numero>140920_ddt3_romagna_1</Numero>
+                    <TipoDocumento>NOTIFICA_MDN</TipoDocumento>
+                </Chiave>
+                <Rappresentazione>
+                    <Formato>UBL</Formato>
+                    <Versione>1.1</Versione>
+                </Rappresentazione>
+            </Documento>
+            <Documento>
+                <Destinatario>EENGRER_73_TestAcquisizion</Destinatario>
+                <Urn>urn:notier:EENGRER_73_TestAcquisizion:2020:140920_ddt3_romagna:CA:NOTIFICA_MDN</Urn>
+                <DataRicezioneNotier>2020-09-14T15:42:01.000+02:00</DataRicezioneNotier>
+                <UrnCollegato>urn:notier:EENGRER_73_TestAcquisizion:2020:140920_5fddt3_5fromagna:CA:DOCUMENTO_DI_TRASPORTO:01</UrnCollegato>
+                <StatoGiacenza>DA_RECAPITARE</StatoGiacenza>
+                <Chiave>
+                    <Mittente>EENGRER_73_TestAcquisizion</Mittente>
+                    <TipoMittente>NOTIER</TipoMittente>
+                    <Anno>2020</Anno>
+                    <Numero>140920_ddt3_romagna</Numero>
+                    <TipoDocumento>NOTIFICA_MDN</TipoDocumento>
+                </Chiave>
+                <Rappresentazione>
+                    <Formato>UBL</Formato>
+                    <Versione>1.1</Versione>
+                </Rappresentazione>
+            </Documento>
+            <Documento>
+                <Destinatario>EENGRER_73_TestAcquisizion</Destinatario>
+                <Urn>urn:notier:EENGRER_73_TestAcquisizion:2020:280720_DDT_COUNT_3:CA:NOTIFICA_MDN</Urn>
+                <DataRicezioneNotier>2020-07-28T16:24:04.000+02:00</DataRicezioneNotier>
+                <UrnCollegato>urn:notier:EENGRER_73_TestAcquisizion:2020:280720_5fDDT_5fCOUNT_5f3:CA:DOCUMENTO_DI_TRASPORTO:01</UrnCollegato>
+                <StatoGiacenza>DA_RECAPITARE</StatoGiacenza>
+                <Chiave>
+                    <Mittente>EENGRER_73_TestAcquisizion</Mittente>
+                    <TipoMittente>NOTIER</TipoMittente>
+                    <Anno>2020</Anno>
+                    <Numero>280720_DDT_COUNT_3</Numero>
+                    <TipoDocumento>NOTIFICA_MDN</TipoDocumento>
+                </Chiave>
+                <Rappresentazione>
+                    <Formato>UBL</Formato>
+                    <Versione>1.1</Versione>
+                </Rappresentazione>
+            </Documento>
+            <Documento>
+                <Destinatario>EENGRER_73_TestAcquisizion</Destinatario>
+                <Urn>urn:notier:EENGRER_73_TestAcquisizion:2020:280720_DDT_COUNT_2:CA:NOTIFICA_MDN</Urn>
+                <DataRicezioneNotier>2020-07-28T16:18:04.000+02:00</DataRicezioneNotier>
+                <UrnCollegato>urn:notier:EENGRER_73_TestAcquisizion:2020:280720_5fDDT_5fCOUNT_5f2:CA:DOCUMENTO_DI_TRASPORTO:01</UrnCollegato>
+                <StatoGiacenza>DA_RECAPITARE</StatoGiacenza>
+                <Chiave>
+                    <Mittente>EENGRER_73_TestAcquisizion</Mittente>
+                    <TipoMittente>NOTIER</TipoMittente>
+                    <Anno>2020</Anno>
+                    <Numero>280720_DDT_COUNT_2</Numero>
+                    <TipoDocumento>NOTIFICA_MDN</TipoDocumento>
+                </Chiave>
+                <Rappresentazione>
+                    <Formato>UBL</Formato>
+                    <Versione>1.1</Versione>
+                </Rappresentazione>
+            </Documento>
+            <Documento>
+                <Destinatario>EENGRER_73_TestAcquisizion</Destinatario>
+                <Urn>urn:notier:EENGRER_73_TestAcquisizion:2020:280720_DDT_COUNT_1:CA:NOTIFICA_MDN</Urn>
+                <DataRicezioneNotier>2020-07-28T15:21:02.000+02:00</DataRicezioneNotier>
+                <UrnCollegato>urn:notier:EENGRER_73_TestAcquisizion:2020:280720_5fDDT_5fCOUNT_5f1:CA:DOCUMENTO_DI_TRASPORTO:01</UrnCollegato>
+                <StatoGiacenza>DA_RECAPITARE</StatoGiacenza>
+                <Chiave>
+                    <Mittente>EENGRER_73_TestAcquisizion</Mittente>
+                    <TipoMittente>NOTIER</TipoMittente>
+                    <Anno>2020</Anno>
+                    <Numero>280720_DDT_COUNT_1</Numero>
+                    <TipoDocumento>NOTIFICA_MDN</TipoDocumento>
+                </Chiave>
+                <Rappresentazione>
+                    <Formato>UBL</Formato>
+                    <Versione>1.1</Versione>
+                </Rappresentazione>
+            </Documento>
+            <Documento>
+                <Destinatario>EENGRER_73_TestAcquisizion</Destinatario>
+                <Urn>urn:notier:EENGRER_73_TestAcquisizion:2020:280720_DDT_COUNT:CA:NOTIFICA_MDN</Urn>
+                <DataRicezioneNotier>2020-07-28T15:00:05.000+02:00</DataRicezioneNotier>
+                <UrnCollegato>urn:notier:EENGRER_73_TestAcquisizion:2020:280720_5fDDT_5fCOUNT:CA:DOCUMENTO_DI_TRASPORTO:01</UrnCollegato>
+                <StatoGiacenza>RECAPITATO</StatoGiacenza>
+                <Chiave>
+                    <Mittente>EENGRER_73_TestAcquisizion</Mittente>
+                    <TipoMittente>NOTIER</TipoMittente>
+                    <Anno>2020</Anno>
+                    <Numero>280720_DDT_COUNT</Numero>
+                    <TipoDocumento>NOTIFICA_MDN</TipoDocumento>
+                </Chiave>
+                <Rappresentazione>
+                    <Formato>UBL</Formato>
+                    <Versione>1.1</Versione>
+                </Rappresentazione>
+            </Documento>
+        </Documenti>
+        <DataInizio>2020-07-01T00:00:00.000+02:00</DataInizio>
+        <DataFine>2020-09-17T23:59:59.999+02:00</DataFine>
+    </ListaDocumenti>
+</EsitoRichiesta>
+
+==== A.4.3. File XML di risposta con esito negativo
+
+[literal]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<EsitoRichiesta xmlns="http://notier.intercenter.rer.it/services/1.0/esito/response">
+    <Versione>1.0</Versione>
+    <Esito>
+        <CodiceEsito>KO</CodiceEsito>
+        <CodiceErrore>ERR-000-GENERICO</CodiceErrore>
+        <DescrizioneErrore>The following constraint violations occurred: [MethodConstraintViolationImpl]</DescrizioneErrore>
+    </Esito>
+</EsitoRichiesta>
+
+=== A.5. Recupero documento di tipo DDT con esito negativo
+
+==== A.5.1. Query String di invocazione
+
+[literal]
+GET  https://test-notier.regione.emilia-romagna.it:8443/notier/rest/v1.0/documenti/recupero/urn:notier:Uff_test_AP_to_AP:2019
+:290620_5fDDT_5f001:CP:DOCUMENTO_DI_TRASPORTO
+
+==== A.5.2. File XML di risposta con esito negativo
+
+[literal]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<EsitoRichiesta xmlns="http://notier.intercenter.rer.it/services/1.0/esito/response">
+    <Versione>1.0</Versione>
+    <Esito>
+        <CodiceEsito>KO</CodiceEsito>
+        <CodiceErrore>ERR-RECDOC-001-NON-AUTORIZZATO</CodiceErrore>
+        <DescrizioneErrore>Client chiamante non autorizzato al recupero del documento</DescrizioneErrore>
+    </Esito>
+</EsitoRichiesta>
+
+=== A.6. Recupero documento di tipo _notifica MDN_ con esito positivo
+
+==== A.6.1. Query String di invocazione
+
+[literal]
+GET https://test-notier.regione.emilia-romagna.it:8443/notier/rest/v1.0/documenti/recupero/urn:notier:Uff_test_AP_to_AP:
+2020:ORD_06082020_TEST_DEDICATED:CA:NOTIFICA_MDN
+
+==== A.6.2. File XML di risposta con esito positivo
+
+[literal]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<NotificaMDN xmlns="http://notier.intercenter.rer.it/services/1.0/notificaMDN">
+    <Esito>
+        <Documento>
+            <Urn>urn:notier:Uff_test_AP_to_AP:2020:ORD_5f06082020_5fTEST_5fDEDICATED:CA:ORDINE:01</Urn>
+            <NumeroDocumento>ORD_06082020_TEST_DEDICATED</NumeroDocumento>
+            <RecipientID>9907:00101010101</RecipientID>
+            <DocumentID>urn:oasis:names:specification:ubl:schema:xsd:Order-2::Order##urn:fdc:peppol.eu:poacc:trns:order:3:restrictive:urn:www.agid.gov.it:trns:ordine:3.1::2.1</DocumentID>
+            <RiferimentoTemporale>
+                <DataInvioSuPeppol>06/08/2020</DataInvioSuPeppol>
+                <OrarioInvioSuPeppol>13:06:05</OrarioInvioSuPeppol>
+            </RiferimentoTemporale>
+        </Documento>
+        <EsitoMDN>
+            <TransmissionID>71047a67-fdcf-4606-a8c4-33f790974cc7@vm21lnx.ente.regione.emr.it</TransmissionID>
+        </EsitoMDN>
+        <EsitoTrasmissione>
+            <CodiceEsito>OK</CodiceEsito>
+        </EsitoTrasmissione>
+    </Esito>
+    <Versione>1.1</Versione>
+</NotificaMDN>
+
+=== A.7. Integrazione dati fiscali
+
+==== A.7.1. File XML di richiesta integrazione dati fiscali
+
+[literal]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DatiConservazione xmlns="http://notier.intercenter.rer.it/services/1.0/daticonservazione/request">
+	<Versione>1.0</Versione>
+	<Documento>
+		<Urn>urn:notier:SOGG-NOT-00171:2017:TEST_C_FCP_02:CP:FATTURA:01</Urn>
+		<RipetiIntegrazione>true</RipetiIntegrazione>
+	</Documento>
+	<DatiRegistrazione>
+		<NumeroRegistrazione>2</NumeroRegistrazione>
+		<DataRegistrazione>2020-08-20</DataRegistrazione>
+		<Registro>FT</Registro>
+		<Protocollo>
+			<NumeroProtocollo>P</NumeroProtocollo>
+			<DataProtocollo>2020-09-01</DataProtocollo>
+		</Protocollo>
+		<OggettoFornitura>TEST_CONS</OggettoFornitura>
+		<Scadenza>2016-09-20</Scadenza>
+		<RiferimentoContabile>TEST_CONS</RiferimentoContabile>
+		<TipoRifContabile>IMPEGNO</TipoRifContabile>
+		<RilevanzaIVA>SI</RilevanzaIVA>
+		<CIG>CIG01</CIG>
+		<CUP>CUP01</CUP>
+	</DatiRegistrazione>
+</DatiConservazione>
+
+==== A.7.2. File XML di risposta con esito positivo
+
+[literal]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<EsitoRichiesta xmlns="http://notier.intercenter.rer.it/services/1.0/esito/response">
+	<Versione>1.0</Versione>
+	<Esito>
+		<CodiceEsito>OK</CodiceEsito>
+	</Esito>
+</EsitoRichiesta>
+
+=== A.8. Lookup Participant ID
+
+==== A.8.1. Query String di invocazione
+
+[literal]
+• https://test-notier.regione.emilia-romagna.it:8443/notier/rest/v1.0/lookup/json/0201:testap
+• https://test-notier.regione.emilia-romagna.it:8443/notier/rest/v1.0/lookup/xml/0201:testap
+
+==== A.8.2. File JSON di risposta
+
+[literal]
+{
+   "esito": true,
+   "participantIdentifier": "0201:testap",
+   "metadata":    [
+            {
+         "processi": [         {
+            "endpoint": [            {
+               "address": "https://test-notier.regione.emilia-romagna.it/oxalis/as2",
+               "certificate": "-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----",
+               "serviceDescription": "undefined",
+               "technicalContactUrl": "undefined",
+               "technicalInformationUrl": "undefined",
+               "transportProfile": "busdox-transport-as2-ver1p0"
+            }],
+            "schema": "cenbii-procid-ubl",
+            "value": "urn:www.cenbii.eu:profile:bii05:ver2.0"
+         }],
+         "participantIdentifier":          {
+            "schema": "iso6523-actorid-upis",
+            "value": "0201:testap"
+         },
+         "documentIdentifier":          {
+            "name": "Nota di Credito PEPPOL BIS 2.1",
+            "schema": "busdox-docid-qns",
+            "value": "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0::2.1"
+         }
+      },
+            {
+         "processi": [         {
+            "endpoint": [            {
+               "address": "https://test-notier.regione.emilia-romagna.it/oxalis/as2",
+               "certificate": "-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----",
+               "serviceDescription": "undefined",
+               "technicalContactUrl": "undefined",
+               "technicalInformationUrl": "undefined",
+               "transportProfile": "busdox-transport-as2-ver1p0"
+            }],
+            "schema": "cenbii-procid-ubl",
+            "value": "urn:www.cenbii.eu:profile:bii03:ver2.0"
+         }],
+         "participantIdentifier":          {
+            "schema": "iso6523-actorid-upis",
+            "value": "0201:testap"
+         },
+         "documentIdentifier":          {
+            "name": "Ordine EU",
+            "schema": "busdox-docid-qns",
+            "value": "urn:oasis:names:specification:ubl:schema:xsd:Order-2::Order##urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol3a:ver2.0::2.1"
+         }
+      },
+            {
+         "processi": [         {
+            "endpoint": [            {
+               "address": "https://test-notier.regione.emilia-romagna.it/oxalis/as2",
+               "certificate": "-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----",
+               "serviceDescription": "undefined",
+               "technicalContactUrl": "undefined",
+               "technicalInformationUrl": "undefined",
+               "transportProfile": "busdox-transport-as2-ver1p0"
+            }],
+            "schema": "cenbii-procid-ubl",
+            "value": "urn:www.cenbii.eu:profile:bii30:ver2.0"
+         }],
+         "participantIdentifier":          {
+            "schema": "iso6523-actorid-upis",
+            "value": "0201:testap"
+         },
+         "documentIdentifier":          {
+            "name": "Documento di Trasporto PEPPOL BIS 2.1",
+            "schema": "busdox-docid-qns",
+            "value": "urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2::DespatchAdvice##urn:www.cenbii.eu:transaction:biitrns016:ver1.0:extended:urn:www.peppol.eu:bis:peppol30a:ver1.0:extended:urn:www.ubl-italia.org:spec:ddt:ver2.1::2.1"
+         }
+      },
+            {
+         "processi": [         {
+            "endpoint": [            {
+               "address": "https://test-notier.regione.emilia-romagna.it/oxalis/as2",
+               "certificate": "-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----",
+               "serviceDescription": "undefined",
+               "technicalContactUrl": "undefined",
+               "technicalInformationUrl": "undefined",
+               "transportProfile": "busdox-transport-as2-ver1p0"
+            }],
+            "schema": "cenbii-procid-ubl",
+            "value": "urn:www.cenbii.eu:profile:bii30:ver2.0"
+         }],
+         "participantIdentifier":          {
+            "schema": "iso6523-actorid-upis",
+            "value": "0201:testap"
+         },
+         "documentIdentifier":          {
+            "name": "Documento di Trasporto EU",
+            "schema": "busdox-docid-qns",
+            "value": "urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2::DespatchAdvice##urn:www.cenbii.eu:transaction:biitrns016:ver1.0:extended:urn:www.peppol.eu:bis:peppol30a:ver1.0::2.1"
+         }
+      },
+            {
+         "processi": [         {
+            "endpoint": [            {
+               "address": "https://test-notier.regione.emilia-romagna.it/oxalis/as2",
+               "certificate": "-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----",
+               "serviceDescription": "undefined",
+               "technicalContactUrl": "undefined",
+               "technicalInformationUrl": "undefined",
+               "transportProfile": "busdox-transport-as2-ver1p0"
+            }],
+            "schema": "cenbii-procid-ubl",
+            "value": "urn:www.cenbii.eu:profile:bii05:ver2.0"
+         }],
+         "participantIdentifier":          {
+            "schema": "iso6523-actorid-upis",
+            "value": "0201:testap"
+         },
+         "documentIdentifier":          {
+            "name": "Nota di Credito EU",
+            "schema": "busdox-docid-qns",
+            "value": "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0::2.1"
+         }
+      },
+            {
+         "processi": [         {
+            "endpoint": [            {
+               "address": "https://test-notier.regione.emilia-romagna.it/oxalis/as2",
+               "certificate": "-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----",
+               "serviceDescription": "undefined",
+               "technicalContactUrl": "undefined",
+               "technicalInformationUrl": "undefined",
+               "transportProfile": "busdox-transport-as2-ver1p0"
+            }],
+            "schema": "cenbii-procid-ubl",
+            "value": "urn:www.cenbii.eu:profile:bii05:ver2.0"
+         }],
+         "participantIdentifier":          {
+            "schema": "iso6523-actorid-upis",
+            "value": "0201:testap"
+         },
+         "documentIdentifier":          {
+            "name": "Fattura PEPPOL BIS 2.1",
+            "schema": "busdox-docid-qns",
+            "value": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0::2.1"
+         }
+      },
+            {
+         "processi": [         {
+            "endpoint": [            {
+               "address": "https://test-notier.regione.emilia-romagna.it/oxalis/as2",
+               "certificate": "-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----",
+               "serviceDescription": "undefined",
+               "technicalContactUrl": "undefined",
+               "technicalInformationUrl": "undefined",
+               "transportProfile": "busdox-transport-as2-ver1p0"
+            }],
+            "schema": "cenbii-procid-ubl",
+            "value": "urn:fdc:peppol.eu:poacc:bis:order_only:3"
+         }],
+         "participantIdentifier":          {
+            "schema": "iso6523-actorid-upis",
+            "value": "0201:testap"
+         },
+         "documentIdentifier":          {
+            "name": "Ordine PEPPOL BIS 3.0",
+            "schema": "busdox-docid-qns",
+            "value": "urn:oasis:names:specification:ubl:schema:xsd:Order-2::Order##urn:fdc:peppol.eu:poacc:trns:order:3::2.1"
+         }
+      },
+            {
+         "processi": [         {
+            "endpoint": [            {
+               "address": "https://test-notier.regione.emilia-romagna.it/oxalis/as2",
+               "certificate": "-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----",
+               "serviceDescription": "undefined",
+               "technicalContactUrl": "undefined",
+               "technicalInformationUrl": "undefined",
+               "transportProfile": "busdox-transport-as2-ver1p0"
+            }],
+            "schema": "cenbii-procid-ubl",
+            "value": "urn:www.cenbii.eu:profile:bii05:ver2.0"
+         }],
+         "participantIdentifier":          {
+            "schema": "iso6523-actorid-upis",
+            "value": "0201:testap"
+         },
+         "documentIdentifier":          {
+            "name": "Fattura EU",
+            "schema": "busdox-docid-qns",
+            "value": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0::2.1"
+         }
+      }
+   ]
+}
+
+==== A.8.3. File XML di risposta
+
+[literal]
+<LookupResponse xmlns="http://notier.intercenter.rer.it/services/1.0/lookup/response">
+   <Esito>true</Esito>
+   <ParticipantIdentifier>0201:testap</ParticipantIdentifier>
+   <Metadata>
+      <Processi>
+         <Schema>cenbii-procid-ubl</Schema>
+         <Value>urn:www.cenbii.eu:profile:bii05:ver2.0</Value>
+         <Endpoint transportProfile="busdox-transport-as2-ver1p0">
+            <Address>https://test-notier.regione.emilia-romagna.it/oxalis/as2</Address>
+            <Certificate>-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----</Certificate>
+            <ServiceDescription>undefined</ServiceDescription>
+            <TechnicalContactUrl>undefined</TechnicalContactUrl>
+            <TechnicalInformationUrl>undefined</TechnicalInformationUrl>
+         </Endpoint>
+      </Processi>
+      <ParticipantIdentifier>
+         <Schema>iso6523-actorid-upis</Schema>
+         <Value>0201:testap</Value>
+      </ParticipantIdentifier>
+      <DocumentIdentifier>
+         <Schema>busdox-docid-qns</Schema>
+         <Value>urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0::2.1</Value>
+         <Name>Nota di Credito PEPPOL BIS 2.1</Name>
+      </DocumentIdentifier>
+   </Metadata>
+   <Metadata>
+      <Processi>
+         <Schema>cenbii-procid-ubl</Schema>
+         <Value>urn:www.cenbii.eu:profile:bii03:ver2.0</Value>
+         <Endpoint transportProfile="busdox-transport-as2-ver1p0">
+            <Address>https://test-notier.regione.emilia-romagna.it/oxalis/as2</Address>
+            <Certificate>-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----</Certificate>
+            <ServiceDescription>undefined</ServiceDescription>
+            <TechnicalContactUrl>undefined</TechnicalContactUrl>
+            <TechnicalInformationUrl>undefined</TechnicalInformationUrl>
+         </Endpoint>
+      </Processi>
+      <ParticipantIdentifier>
+         <Schema>iso6523-actorid-upis</Schema>
+         <Value>0201:testap</Value>
+      </ParticipantIdentifier>
+      <DocumentIdentifier>
+         <Schema>busdox-docid-qns</Schema>
+         <Value>urn:oasis:names:specification:ubl:schema:xsd:Order-2::Order##urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol3a:ver2.0::2.1</Value>
+         <Name>Ordine EU</Name>
+      </DocumentIdentifier>
+   </Metadata>
+   <Metadata>
+      <Processi>
+         <Schema>cenbii-procid-ubl</Schema>
+         <Value>urn:www.cenbii.eu:profile:bii30:ver2.0</Value>
+         <Endpoint transportProfile="busdox-transport-as2-ver1p0">
+            <Address>https://test-notier.regione.emilia-romagna.it/oxalis/as2</Address>
+            <Certificate>-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----</Certificate>
+            <ServiceDescription>undefined</ServiceDescription>
+            <TechnicalContactUrl>undefined</TechnicalContactUrl>
+            <TechnicalInformationUrl>undefined</TechnicalInformationUrl>
+         </Endpoint>
+      </Processi>
+      <ParticipantIdentifier>
+         <Schema>iso6523-actorid-upis</Schema>
+         <Value>0201:testap</Value>
+      </ParticipantIdentifier>
+      <DocumentIdentifier>
+         <Schema>busdox-docid-qns</Schema>
+         <Value>urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2::DespatchAdvice##urn:www.cenbii.eu:transaction:biitrns016:ver1.0:extended:urn:www.peppol.eu:bis:peppol30a:ver1.0:extended:urn:www.ubl-italia.org:spec:ddt:ver2.1::2.1</Value>
+         <Name>Documento di Trasporto PEPPOL BIS 2.1</Name>
+      </DocumentIdentifier>
+   </Metadata>
+   <Metadata>
+      <Processi>
+         <Schema>cenbii-procid-ubl</Schema>
+         <Value>urn:www.cenbii.eu:profile:bii30:ver2.0</Value>
+         <Endpoint transportProfile="busdox-transport-as2-ver1p0">
+            <Address>https://test-notier.regione.emilia-romagna.it/oxalis/as2</Address>
+            <Certificate>-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----</Certificate>
+            <ServiceDescription>undefined</ServiceDescription>
+            <TechnicalContactUrl>undefined</TechnicalContactUrl>
+            <TechnicalInformationUrl>undefined</TechnicalInformationUrl>
+         </Endpoint>
+      </Processi>
+      <ParticipantIdentifier>
+         <Schema>iso6523-actorid-upis</Schema>
+         <Value>0201:testap</Value>
+      </ParticipantIdentifier>
+      <DocumentIdentifier>
+         <Schema>busdox-docid-qns</Schema>
+         <Value>urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2::DespatchAdvice##urn:www.cenbii.eu:transaction:biitrns016:ver1.0:extended:urn:www.peppol.eu:bis:peppol30a:ver1.0::2.1</Value>
+         <Name>Documento di Trasporto EU</Name>
+      </DocumentIdentifier>
+   </Metadata>
+   <Metadata>
+      <Processi>
+         <Schema>cenbii-procid-ubl</Schema>
+         <Value>urn:www.cenbii.eu:profile:bii05:ver2.0</Value>
+         <Endpoint transportProfile="busdox-transport-as2-ver1p0">
+            <Address>https://test-notier.regione.emilia-romagna.it/oxalis/as2</Address>
+            <Certificate>-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----</Certificate>
+            <ServiceDescription>undefined</ServiceDescription>
+            <TechnicalContactUrl>undefined</TechnicalContactUrl>
+            <TechnicalInformationUrl>undefined</TechnicalInformationUrl>
+         </Endpoint>
+      </Processi>
+      <ParticipantIdentifier>
+         <Schema>iso6523-actorid-upis</Schema>
+         <Value>0201:testap</Value>
+      </ParticipantIdentifier>
+      <DocumentIdentifier>
+         <Schema>busdox-docid-qns</Schema>
+         <Value>urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0::2.1</Value>
+         <Name>Nota di Credito EU</Name>
+      </DocumentIdentifier>
+   </Metadata>
+   <Metadata>
+      <Processi>
+         <Schema>cenbii-procid-ubl</Schema>
+         <Value>urn:www.cenbii.eu:profile:bii05:ver2.0</Value>
+         <Endpoint transportProfile="busdox-transport-as2-ver1p0">
+            <Address>https://test-notier.regione.emilia-romagna.it/oxalis/as2</Address>
+            <Certificate>-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----</Certificate>
+            <ServiceDescription>undefined</ServiceDescription>
+            <TechnicalContactUrl>undefined</TechnicalContactUrl>
+            <TechnicalInformationUrl>undefined</TechnicalInformationUrl>
+         </Endpoint>
+      </Processi>
+      <ParticipantIdentifier>
+         <Schema>iso6523-actorid-upis</Schema>
+         <Value>0201:testap</Value>
+      </ParticipantIdentifier>
+      <DocumentIdentifier>
+         <Schema>busdox-docid-qns</Schema>
+         <Value>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0::2.1</Value>
+         <Name>Fattura PEPPOL BIS 2.1</Name>
+      </DocumentIdentifier>
+   </Metadata>
+   <Metadata>
+      <Processi>
+         <Schema>cenbii-procid-ubl</Schema>
+         <Value>urn:fdc:peppol.eu:poacc:bis:order_only:3</Value>
+         <Endpoint transportProfile="busdox-transport-as2-ver1p0">
+            <Address>https://test-notier.regione.emilia-romagna.it/oxalis/as2</Address>
+            <Certificate>-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----</Certificate>
+            <ServiceDescription>undefined</ServiceDescription>
+            <TechnicalContactUrl>undefined</TechnicalContactUrl>
+            <TechnicalInformationUrl>undefined</TechnicalInformationUrl>
+         </Endpoint>
+      </Processi>
+      <ParticipantIdentifier>
+         <Schema>iso6523-actorid-upis</Schema>
+         <Value>0201:testap</Value>
+      </ParticipantIdentifier>
+      <DocumentIdentifier>
+         <Schema>busdox-docid-qns</Schema>
+         <Value>urn:oasis:names:specification:ubl:schema:xsd:Order-2::Order##urn:fdc:peppol.eu:poacc:trns:order:3::2.1</Value>
+         <Name>Ordine PEPPOL BIS 3.0</Name>
+      </DocumentIdentifier>
+   </Metadata>
+   <Metadata>
+      <Processi>
+         <Schema>cenbii-procid-ubl</Schema>
+         <Value>urn:www.cenbii.eu:profile:bii05:ver2.0</Value>
+         <Endpoint transportProfile="busdox-transport-as2-ver1p0">
+            <Address>https://test-notier.regione.emilia-romagna.it/oxalis/as2</Address>
+            <Certificate>-----BEGIN CERTIFICATE-----[certificato .pem]==-----END CERTIFICATE-----</Certificate>
+            <ServiceDescription>undefined</ServiceDescription>
+            <TechnicalContactUrl>undefined</TechnicalContactUrl>
+            <TechnicalInformationUrl>undefined</TechnicalInformationUrl>
+         </Endpoint>
+      </Processi>
+      <ParticipantIdentifier>
+         <Schema>iso6523-actorid-upis</Schema>
+         <Value>0201:testap</Value>
+      </ParticipantIdentifier>
+      <DocumentIdentifier>
+         <Schema>busdox-docid-qns</Schema>
+         <Value>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0::2.1</Value>
+         <Name>Fattura EU</Name>
+      </DocumentIdentifier>
+   </Metadata>
+</LookupResponse>
+
+=== A.9. Monitoraggio
+
+==== A.9.1. Query string di invocazione
+
+[literal]
+GET https://test-notier.regione.emilia-romagna.it:8443/notier/rest/v1.0/documenti/monitoraggio?idnotier=Uff_test_AP_to_AP&tipo_ciclo=cp&inizio=4&offset=14
+
+==== A.9.2. File XML di risposta con esito positivo
+
+[literal]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<EsitoMonitoraggio xmlns="http://notier.intercenter.rer.it/services/1.0/monitoraggio/response">
+    <Versione>1.0</Versione>
+    <Esito>
+        <CodiceEsito>OK</CodiceEsito>
+    </Esito>
+    <Parametri>
+        <IdNotier>Uff_test_AP_to_AP</IdNotier>
+        <TipoCiclo>cp</TipoCiclo>
+        <Paginazione>
+            <Inizio>4</Inizio>
+            <Fine>14</Fine>
+        </Paginazione>
+    </Parametri>
+    <ListaDocumenti>
+        <TotaleDocumenti>15</TotaleDocumenti>
+        <TotaleDocumentiFiltrati>11</TotaleDocumentiFiltrati>
+        <Documenti>
+            <Documento>
+                <Urn>urn:notier:SOGG-NOT-00404:2020:1098_2dEdi:CP:DOCUMENTO_DI_TRASPORTO</Urn>
+                <Chiave>
+                    <Mittente>PHARMA MAR SRL</Mittente>
+                    <Anno>2020</Anno>
+                    <Numero>1098-Edi</Numero>
+                    <TipoDocumento>DOCUMENTO_DI_TRASPORTO</TipoDocumento>
+                </Chiave>
+                <DataRicezioneNotier>2020-09-18T12:27:00.000+02:00</DataRicezioneNotier>
+                <StatoDocumento>
+                    <Sessione>
+                        <TipoSessione>RICEZIONE_PEPPOL</TipoSessione>
+                        <StatoSessione>DA_RECAPITARE</StatoSessione>
+                        <DataInizioSessione>2020-09-18T12:27:01.000+02:00</DataInizioSessione>
+                    </Sessione>
+                </StatoDocumento>
+                <Mittente>
+                    <RagioneSociale>PHARMA MAR SRL</RagioneSociale>
+                    <IdPeppol>9906:07858440964</IdPeppol>
+                </Mittente>
+            </Documento>
+            <Documento>
+                <Urn>urn:notier:SOGG-NOT-00346:2014:290620_5fDDT_5f3_5fITA_5f01_5fRIC:CP:DOCUMENTO_DI_TRASPORTO</Urn>
+                <Chiave>
+                    <Mittente>FIAB S.P.A.</Mittente>
+                    <Anno>2014</Anno>
+                    <Numero>290620_DDT_3_ITA_01_RIC</Numero>
+                    <TipoDocumento>DOCUMENTO_DI_TRASPORTO</TipoDocumento>
+                </Chiave>
+                <DataRicezioneNotier>2020-09-21T16:01:41.000+02:00</DataRicezioneNotier>
+                <StatoDocumento>
+                    <Sessione>
+                        <TipoSessione>RICEZIONE_PEPPOL</TipoSessione>
+                        <StatoSessione>DA_RECAPITARE</StatoSessione>
+                        <DataInizioSessione>2020-09-21T16:01:41.000+02:00</DataInizioSessione>
+                    </Sessione>
+                </StatoDocumento>
+                <Mittente>
+                    <RagioneSociale>FIAB S.P.A.</RagioneSociale>
+                    <IdPeppol>9907:01835220482</IdPeppol>
+                </Mittente>
+            </Documento>
+            <Documento>
+                <Urn>urn:notier:SOGG-NOT-00412:2014:290620_5fDDT_5f3_5fITA_5f01_5fRIC:CP:DOCUMENTO_DI_TRASPORTO</Urn>
+                <Chiave>
+                    <Mittente>FIDIA FARMACEUTICI S.p.A</Mittente>
+                    <Anno>2014</Anno>
+                    <Numero>290620_DDT_3_ITA_01_RIC</Numero>
+                    <TipoDocumento>DOCUMENTO_DI_TRASPORTO</TipoDocumento>
+                </Chiave>
+                <DataRicezioneNotier>2020-09-21T16:02:05.000+02:00</DataRicezioneNotier>
+                <StatoDocumento>
+                    <Sessione>
+                        <TipoSessione>RICEZIONE_PEPPOL</TipoSessione>
+                        <StatoSessione>DA_RECAPITARE</StatoSessione>
+                        <DataInizioSessione>2020-09-21T16:02:05.000+02:00</DataInizioSessione>
+                    </Sessione>
+                </StatoDocumento>
+                <Mittente>
+                    <RagioneSociale>FIDIA FARMACEUTICI S.p.A</RagioneSociale>
+                    <IdPeppol>9907:01835220445</IdPeppol>
+                </Mittente>
+            </Documento>
+            <Documento>
+                <Urn>urn:notier:SOGG-NOT-00413:2014:290620_5fDDT_5f3_5fITA_5f01_5fRIC:CP:DOCUMENTO_DI_TRASPORTO:02</Urn>
+                <Chiave>
+                    <Mittente>FIDIA FARMACEUTICI S.p.A</Mittente>
+                    <Anno>2014</Anno>
+                    <Numero>290620_DDT_3_ITA_01_RIC</Numero>
+                    <TipoDocumento>DOCUMENTO_DI_TRASPORTO</TipoDocumento>
+                </Chiave>
+                <DataRicezioneNotier>2020-09-21T16:02:49.000+02:00</DataRicezioneNotier>
+                <StatoDocumento>
+                    <Sessione>
+                        <TipoSessione>RICEZIONE_PEPPOL</TipoSessione>
+                        <StatoSessione>DA_RECAPITARE</StatoSessione>
+                        <DataInizioSessione>2020-09-21T16:02:49.000+02:00</DataInizioSessione>
+                    </Sessione>
+                </StatoDocumento>
+                <Mittente>
+                    <RagioneSociale>FIDIA FARMACEUTICI S.p.A</RagioneSociale>
+                    <IdPeppol>9907:01835220444</IdPeppol>
+                </Mittente>
+            </Documento>
+            <Documento>
+                <Urn>urn:notier:SOGG-NOT-00414:2014:290620_5fDDT_5f3_5fITA_5f01_5fRIC:CP:DOCUMENTO_DI_TRASPORTO</Urn>
+                <Chiave>
+                    <Mittente>FIDIA FARMACEUTICI S.p.A</Mittente>
+                    <Anno>2014</Anno>
+                    <Numero>290620_DDT_3_ITA_01_RIC</Numero>
+                    <TipoDocumento>DOCUMENTO_DI_TRASPORTO</TipoDocumento>
+                </Chiave>
+                <DataRicezioneNotier>2020-09-21T16:03:09.000+02:00</DataRicezioneNotier>
+                <StatoDocumento>
+                    <Sessione>
+                        <TipoSessione>RICEZIONE_PEPPOL</TipoSessione>
+                        <StatoSessione>DA_RECAPITARE</StatoSessione>
+                        <DataInizioSessione>2020-09-21T16:03:09.000+02:00</DataInizioSessione>
+                    </Sessione>
+                </StatoDocumento>
+                <Mittente>
+                    <RagioneSociale>FIDIA FARMACEUTICI S.p.A</RagioneSociale>
+                    <IdPeppol>9907:01835220447</IdPeppol>
+                </Mittente>
+            </Documento>
+            <Documento>
+                <Urn>urn:notier:SOGG-NOT-00415:2014:290620_5fDDT_5f3_5fITA_5f01_5fRIC:CP:DOCUMENTO_DI_TRASPORTO</Urn>
+                <Chiave>
+                    <Mittente>FIDIA FARMACEUTICI S.p.A</Mittente>
+                    <Anno>2014</Anno>
+                    <Numero>290620_DDT_3_ITA_01_RIC</Numero>
+                    <TipoDocumento>DOCUMENTO_DI_TRASPORTO</TipoDocumento>
+                </Chiave>
+                <DataRicezioneNotier>2020-09-21T16:03:23.000+02:00</DataRicezioneNotier>
+                <StatoDocumento>
+                    <Sessione>
+                        <TipoSessione>RICEZIONE_PEPPOL</TipoSessione>
+                        <StatoSessione>DA_RECAPITARE</StatoSessione>
+                        <DataInizioSessione>2020-09-21T16:03:23.000+02:00</DataInizioSessione>
+                    </Sessione>
+                </StatoDocumento>
+                <Mittente>
+                    <RagioneSociale>FIDIA FARMACEUTICI S.p.A</RagioneSociale>
+                    <IdPeppol>9907:01835220449</IdPeppol>
+                </Mittente>
+            </Documento>
+            <Documento>
+                <Urn>urn:notier:SOGG-NOT-00380:2014:290620_5fDDT_5f3_5fITA_5f01_5fRIC:CP:DOCUMENTO_DI_TRASPORTO</Urn>
+                <Chiave>
+                    <Mittente>NoTI-ER</Mittente>
+                    <Anno>2014</Anno>
+                    <Numero>290620_DDT_3_ITA_01_RIC</Numero>
+                    <TipoDocumento>DOCUMENTO_DI_TRASPORTO</TipoDocumento>
+                </Chiave>
+                <DataRicezioneNotier>2020-09-21T16:03:39.000+02:00</DataRicezioneNotier>
+                <StatoDocumento>
+                    <Sessione>
+                        <TipoSessione>RICEZIONE_PEPPOL</TipoSessione>
+                        <StatoSessione>DA_RECAPITARE</StatoSessione>
+                        <DataInizioSessione>2020-09-21T16:03:39.000+02:00</DataInizioSessione>
+                    </Sessione>
+                </StatoDocumento>
+                <Mittente>
+                    <RagioneSociale>NoTI-ER</RagioneSociale>
+                    <IdPeppol>0201:prova</IdPeppol>
+                </Mittente>
+            </Documento>
+            <Documento>
+                <Urn>urn:notier:SOGG-NOT-00416:2014:290620_5fDDT_5f3_5fITA_5f01_5fRIC:CP:DOCUMENTO_DI_TRASPORTO</Urn>
+                <Chiave>
+                    <Mittente>FIDIA FARMACEUTICI S.p.A</Mittente>
+                    <Anno>2014</Anno>
+                    <Numero>290620_DDT_3_ITA_01_RIC</Numero>
+                    <TipoDocumento>DOCUMENTO_DI_TRASPORTO</TipoDocumento>
+                </Chiave>
+                <DataRicezioneNotier>2020-09-21T16:03:52.000+02:00</DataRicezioneNotier>
+                <StatoDocumento>
+                    <Sessione>
+                        <TipoSessione>RICEZIONE_PEPPOL</TipoSessione>
+                        <StatoSessione>DA_RECAPITARE</StatoSessione>
+                        <DataInizioSessione>2020-09-21T16:03:52.000+02:00</DataInizioSessione>
+                    </Sessione>
+                </StatoDocumento>
+                <Mittente>
+                    <RagioneSociale>FIDIA FARMACEUTICI S.p.A</RagioneSociale>
+                    <IdPeppol>0201:test</IdPeppol>
+                </Mittente>
+            </Documento>
+            <Documento>
+                <Urn>urn:notier:Uff_test_AP_to_AP:2014:290620_5fDDT_5f3_5fITA_5f01_5fRIC:CP:DOCUMENTO_DI_TRASPORTO</Urn>
+                <Chiave>
+                    <Mittente>UFF_TEST_AP_TO_AP</Mittente>
+                    <Anno>2014</Anno>
+                    <Numero>290620_DDT_3_ITA_01_RIC</Numero>
+                    <TipoDocumento>DOCUMENTO_DI_TRASPORTO</TipoDocumento>
+                </Chiave>
+                <DataRicezioneNotier>2020-09-21T16:04:17.000+02:00</DataRicezioneNotier>
+                <StatoDocumento>
+                    <Sessione>
+                        <TipoSessione>RICEZIONE_PEPPOL</TipoSessione>
+                        <StatoSessione>DA_RECAPITARE</StatoSessione>
+                        <DataInizioSessione>2020-09-21T16:04:17.000+02:00</DataInizioSessione>
+                    </Sessione>
+                </StatoDocumento>
+                <Mittente>
+                    <RagioneSociale>UFF_TEST_AP_TO_AP</RagioneSociale>
+                    <IdPeppol>0201:TESTAP</IdPeppol>
+                    <CodiceFiscale>01231231230</CodiceFiscale>
+                    <PartitaIVA>01231231230</PartitaIVA>
+                </Mittente>
+            </Documento>
+            <Documento>
+                <Urn>urn:notier:SOGG-NOT-00417:2014:V000016341:CP:DOCUMENTO_DI_TRASPORTO</Urn>
+                <Chiave>
+                    <Mittente>FIDIA FARMACEUTICI S.p.A</Mittente>
+                    <Anno>2014</Anno>
+                    <Numero>V000016341</Numero>
+                    <TipoDocumento>DOCUMENTO_DI_TRASPORTO</TipoDocumento>
+                </Chiave>
+                <DataRicezioneNotier>2020-09-23T17:44:34.000+02:00</DataRicezioneNotier>
+                <StatoDocumento>
+                    <Sessione>
+                        <TipoSessione>RICEZIONE_PEPPOL</TipoSessione>
+                        <StatoSessione>TEMPORANEO_INBOUND</StatoSessione>
+                        <DataInizioSessione>2020-09-23T17:44:35.000+02:00</DataInizioSessione>
+                    </Sessione>
+                </StatoDocumento>
+                <Mittente>
+                    <RagioneSociale>FIDIA FARMACEUTICI S.p.A</RagioneSociale>
+                    <IdPeppol>9906:it01394200362</IdPeppol>
+                </Mittente>
+            </Documento>
+            <Documento>
+                <Urn>urn:notier:SOGG-NOT-00417:2020:wewewe_2ftest:CP:DOCUMENTO_DI_TRASPORTO</Urn>
+                <Chiave>
+                    <Mittente>FIDIA FARMACEUTICI S.p.A</Mittente>
+                    <Anno>2020</Anno>
+                    <Numero>wewewe/test</Numero>
+                    <TipoDocumento>DOCUMENTO_DI_TRASPORTO</TipoDocumento>
+                </Chiave>
+                <DataRicezioneNotier>2020-09-24T15:57:55.000+02:00</DataRicezioneNotier>
+                <StatoDocumento>
+                    <Sessione>
+                        <TipoSessione>RICEZIONE_PEPPOL</TipoSessione>
+                        <StatoSessione>DA_RECAPITARE</StatoSessione>
+                        <DataInizioSessione>2020-09-24T15:57:55.000+02:00</DataInizioSessione>
+                    </Sessione>
+                </StatoDocumento>
+                <Mittente>
+                    <RagioneSociale>FIDIA FARMACEUTICI S.p.A</RagioneSociale>
+                    <IdPeppol>9906:it01394200362</IdPeppol>
+                </Mittente>
+            </Documento>
+        </Documenti>
+    </ListaDocumenti>
+</EsitoMonitoraggio>
+
+=== A.10. Ricerca su Peppol Directory
+
+==== A.10.1 Query string di invocazione
+
+[literal]
+GET  https://test-notier.regione.emilia-romagna.it:8443/notier/rest/v1.0/PD/search?all=ospedale
+
+==== A.10.2. File Json di risposta
+
+[literal]
+{
+    "version": "1.0",
+    "total-result-count": 2,
+    "used-result-count": 2,
+    "result-page-index": 0,
+    "result-page-count": 20,
+    "first-result-index": 0,
+    "last-result-index": 1,
+    "query-terms": "q=ospedale",
+    "creation-dt": "2020-09-17T14:17:24.549Z",
+    "matches": [
+        {
+            "participantID": {
+                "scheme": "iso6523-actorid-upis",
+                "value": "9949:si10641424"
+            },
+            "docTypes": [
+                {
+                    "scheme": "busdox-docid-qns",
+                    "value": "urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0"
+                },
+                {
+                    "scheme": "busdox-docid-qns",
+                    "value": "urn:oasis:names:specification:ubl:schema:xsd:Order-2::Order##urn:www.cenbii.eu:transaction:biitrns001:ver2.0:extended:urn:www.peppol.eu:bis:peppol28a:ver1.0::2.1"
+                },
+                {
+                    "scheme": "busdox-docid-qns",
+                    "value": "busdox-docid-qns::urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0"
+                },
+                {
+                    "scheme": "busdox-docid-qns",
+                    "value": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol4a:ver2.0::2.1"
+                },
+                {
+                    "scheme": "busdox-docid-qns",
+                    "value": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0::2.1"
+                }
+            ],
+            "entities": [
+                {
+                    "name": [
+                        {
+                            "name": "SPLO?NA BOLNI?NICA IZOLA OSPEDALE GENERALE ISOLA"
+                        }
+                    ],
+                    "countryCode": "SI",
+                    "identifiers": [
+                        {
+                            "scheme": "9949",
+                            "value": "SI79007589"
+                        }
+                    ]
+                },
+                {
+                    "name": [
+                        {
+                            "name": "ORTOPEDSKA BOLNI?NICA VALDOLTRA OSPEDALE ORTOPEDICO VALDOLTRA"
+                        }
+                    ],
+                    "countryCode": "SI",
+                    "identifiers": [
+                        {
+                            "scheme": "9949",
+                            "value": "SI30348145"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+
+=== A.11. Metadati Peppol
+
+Per l’invio dei documenti verso Peppol, si rende necessario compilare nei metadati di invio il blocco _<MetadatiBusdox>_. +
+Si riportano di seguito i valori da inserire in corrispondenza dei campi _<DocumentIdentifier>_, _<ProcessIdentifier>_ (all’interno dei metadati del documento, quindi SBDH) e _<CustomizationID>_ (all’intero del documento stesso, quindi Payload).
+
+====
+* *Documento di Trasporto PEPPOL BIS 2.1 (ITA)*
+** *Process ID:* urn:www.cenbii.eu:profile:bii30:ver2.0
+** *Document ID:* urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2::DespatchAdvice##urn:www.cenbii.eu:transaction:biitrns016:ver1.0:extended:urn:www.peppol.eu:bis:peppol30a:ver1.0:extended:urn:www.ubl-italia.org:spec:ddt:ver2.1::2.1
+** *Customization ID:* urn:www.cenbii.eu:transaction:biitrns016:ver1.0:extended:urn:www.peppol.eu:bis:peppol30a:ver1.0:extended:urn:www.ubl-italia.org:spec:ddt:ver2.1
+====
+====
+* *Documento di Trasporto PEPPOL BIS 3.0 (ITA)*
+** *Process ID:* urn:fdc:peppol.eu:poacc:bis:despatch_advice:3
+** *Document ID:* urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2::DespatchAdvice##urn:fdc:peppol.eu:poacc:trns:despatch_advice:3:extended:urn:www.agid.gov.it:trns:ddt:3.1::2.1
+** *Customization ID:* urn:fdc:peppol.eu:poacc:trns:despatch_advice:3:extended:urn:www.agid.gov.it:trns:ddt:3.1
+====
+====
+* *Documento di Trasporto PEPPOL BIS 3.0 (EU)*
+** *Process ID:* urn:fdc:peppol.eu:poacc:bis:despatch_advice:3
+** *Document ID:* urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2::DespatchAdvice##urn:fdc:peppol.eu:poacc:trns:despatch_advice:3::2.1
+** *Customization ID:* urn:fdc:peppol.eu:poacc:trns:despatch_advice:3
+====
+====
+* *Fattura Peppol BIS 2.1. (ITA)*
+** *Process ID:* urn:www.cenbii.eu:profile:bii05:ver2.0
+** *Document ID:* urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0::2.1
+** *Customization ID:* urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0
+====
+====
+* *Fattura Peppol BIS 2.1. (EU)*
+** *Process ID:* urn:www.cenbii.eu:profile:bii05:ver2.0
+** *Document ID:* urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0::2.1
+** *Customization ID:* urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0
+====
+====
+* *Fattura Peppol BIS 3.0 (ITA)*
+** *Process ID:* urn:fdc:peppol.eu:2017:poacc:billing:01:1.0
+** *Document ID:* urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0:extended:urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1
+** *Customization ID:* urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0:extended:urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0
+====
+====
+* *Nota di Credito PEPPOL BIS 2.1 (ITA)*
+** *Process ID:* urn:www.cenbii.eu:profile:bii05:ver2.0
+** *Document ID:* urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0::2.1
+** *Customization ID:* urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0
+====
+====
+* *Nota di Credito PEPPOL BIS 2.1 (EU)*
+** *Process ID:* urn:www.cenbii.eu:profile:bii05:ver2.0
+** *Document ID:* urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0::2.1
+** *Customization ID:* urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0
+====
+====
+* *Nota di Credito PEPPOL BIS 3.0 (ITA)*
+** *Process ID:* urn:fdc:peppol.eu:2017:poacc:billing:01:1.0
+** *Document ID:* urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0:extended:urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1
+** *Customization ID:* urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0:extended:urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0
+====
+====
+* *Ordine PEPPOL BIS 3.0 (ITA)*
+** *Process ID:* urn:fdc:peppol.eu:poacc:bis:order_only:3
+** *Document ID:* urn:oasis:names:specification:ubl:schema:xsd:Order-2::Order##urn:fdc:peppol.eu:poacc:trns:order:3:restrictive:urn:www.agid.gov.it:trns:ordine:3.1::2.1
+** *Customization ID:* urn:fdc:peppol.eu:poacc:trns:order:3:restrictive:urn:www.agid.gov.it:trns:ordine:3.1
+====
+====
+* *Ordine PEPPOL BIS 3.0 (EU)*
+** *Process ID:* urn:fdc:peppol.eu:poacc:bis:order_only:3
+** *Document ID:* urn:oasis:names:specification:ubl:schema:xsd:Order-2::Order##urn:fdc:peppol.eu:poacc:trns:order:3::2.1
+** *Customization ID:* urn:fdc:peppol.eu:poacc:trns:order:3
+====
+
+==== A.11.1. Esempio di metadati BusDox  per l'invio di una _Fattura BIS_3_
+
+[literal]
+<MetadatiBusdox>
+    <RecipientIdentifier>0201:testap</RecipientIdentifier>
+    <SenderIdentifier>0201:TDDTB3</SenderIdentifier>
+    <DocumentIdentifier>urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0:extended:urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1
+</DocumentIdentifier>
+    <ProcessIdentifier> urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:urn:www.ubl-italia.org:spec:fatturapa:ver2.0:extended:urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</ProcessIdentifier>
+  </MetadatiBusdox>
+
+==== A.11.2. Esempio di metadati BusDox per l'invio di un _Documento di trasporto BIS_3_
+
+[literal]
+<MetadatiBusdox>
+    <RecipientIdentifier>0201:testap</RecipientIdentifier>
+    <SenderIdentifier>0201:TDDTB3</SenderIdentifier>
+    <DocumentIdentifier>urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2::DespatchAdvice##urn:fdc:peppol.eu:poacc:trns:despatch_advice:3:extended:urn:www.agid.gov.it:trns:ddt:3.1::2.1</DocumentIdentifier>
+    <ProcessIdentifier>urn:fdc:peppol.eu:poacc:bis:despatch_advice:3</ProcessIdentifier>
+  </MetadatiBusdox>

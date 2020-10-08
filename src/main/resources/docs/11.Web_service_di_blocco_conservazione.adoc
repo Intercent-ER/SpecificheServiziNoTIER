@@ -1,0 +1,55 @@
+== Web Service di blocco conservazione
+(((11. Web Service di blocco conservazione)))
+
+Questo _web service_, a disposizione di tutti gli Enti registrati su NoTI-ER, è finalizzato a dichiarare che un determinato documento presente in NoTI-ER non debba essere effettivamente più versato in conservazione, al fine di evitare che compaia nei report periodici.
+
+=== URL di invocazione
+
+L’URL per invocare il servizio di _monitoraggio_ è composto come segue:
+
+GET [blue]#https://# [red]#<host-NoTIER>:<porta-NoTIER># [blue]#/notier/rest/v1.0/documenti/bloccaconservazione/{urn_documento}#
+
+=== Richiesta
+
+La _Request_ deve essere una *GET HTTP* verso l'indirizzo specificato nel paragrafo precedente. +
+Il chiamante deve sostituire la stringa _{urn_documento}_ con l'URN del docuemtno di interesse.
+
+=== Risposta
+
+NoTI-ER risponde inviando l'esito dell'operazione di _blocco conservazione_ in formato XML che, in caso di esito negativo, riporta il codice d'errore e la relativa descrizione.
+
+
+==== Formato del file XML di risposta
+
+[width="100%",cols="^,^,^,^,^,^">,options="header,footer"]
+|===
+|Tag XML | Descrizione | Vincoli | Tipo dato | Esempio | Obbl.
+6.1+^s| Inizio sessione <EsitoRichiesta> [1..1]
+s| Versione | Versione del XML di esito risposta | 10 caratteri max | Stringa | 1.0 | Sì
+6.1+^s| Inizio sessione <EsitoRichiesta>/<Esito> [1..1]
+s| CodiceEsito | Esito della richiesta. Vale OK in caso di esito positivo, KO in caso di esito negativo. | Valori ammessi: +
+- OK +
+- KO  | Tipo predefinito | KO | Sì
+s| CodiceErrore | Definisce il codice dell'errorefootnote:[per la panoramica dei codici di errore e relativa descrizione, si veda il paragrafo 11.3.2.]. | CodiceEsito = KO |  Tipo predefinito | | No
+s| DescrizioneErrore | Descrizionde dell'errore. | CodiceEsito = KO | Stringa | | No
+6.1+^s| Fine sessione <EsitoRichiesta>/<Esito>
+6.1+^s| Fine sessione <EsitoRichiesta>
+|===
+
+
+==== Codici di errore
+
+In caso di risposta con esito negativo (_<CodiceEsito>KO</CodiceEsito>_), NoTI-ER valorizza il tag _<CodiceErrore>_ con uno dei valori definiti nel XSD “EsitoRichiesta v1.1” e di cui segue la descrizione.
+
+[width="100%",cols=",">,options="header,footer"]
+|===
+^| Codice ^| Errore
+| ERR-000-GENERICO | Codice d'errore generico. Indica che NoTI-ER non è riuscito ad elaborare la richiesta a causa di un errore generico interno. +
+Rientrano in questa categoria gli errori causati ad esempio dalla non disponibilità del database o problemi di natura sistemistica. +
+Il client deve considerare la richiesta come non processata e provvedere a re inoltrarla.
+| ERR-BLOCCOCONS-001-NON-AUTORIZZATO	| Indica che il chiamante, identificato tramite il _Common Name del certificato X.509_ non è autorizzato a richiamare il servizio oppure non è autorizzato a richiedere l’integrazione del documento specificato nel tag _<DatiConservazione >/<Documento>/<Urn>_.
+| ERR-BLOCCOCONS-002-NON-TROVATO	| Indica che il documento specificato dal parametro URN della richiesta non esiste su NoTI-ER.
+| ERR-BLOCCOCONS-003-NON-APPLICABILE |	Indica che il documento specificato dal parametro URN della richiesta, sebbene presente su NoTI-ER, non si trova in uno stato compatibile con la richiesta di blocco conservazione (ad esempio perché già versato in ParER). +
+Nella descrizione dell’errore, ove possibile, viene inserito un maggior dettaglio sul motivo per cui il blocco conservazione non è applicabile per il documento selezionato.
+||
+|===

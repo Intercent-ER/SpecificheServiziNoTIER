@@ -55,6 +55,11 @@ _/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP idnotier=Uff_te
 *Esempio:* +
 _/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP&tipo_ciclo=ca&stato_documento=DA_RECAPITARE_ | No
 
+^| inviato_nso | Permette di filtrare per i soli documenti inviati a NSOfootnote:[questo parametro ha valore solamente nel caso sia stato inserito il tipo_ciclo=CA.]  o per i soli non inviati a NSO, a seconda della valorizzazione a _true_ o _false_ del parametro booleano.
+
+*Esempio:* +
+_/notier/rest/v1.0/documenti/recupero?idnotier=Uff_test_AP_to_AP&tipo_ciclo=ca&inviato_nso=true_ | No
+
 ^| identificativo_nso | Permette la ricerca puntuale per identificativo NSO.
 
 *Esempio:* +
@@ -116,16 +121,16 @@ Segue una descrizione dei campi dichiarati all’interno dello schema.
 [width="100%",cols="^,^,^,^,^,^">,options="header,footer"]
 |===
 |Tag XML | Descrizione | Vincoli | Tipo dato | Esempio | Obbl.
-6.1+^s| Inizio sessione <EsitoMonitoraggio> [1..1]
+6.1+^s| Inizio sezione <EsitoMonitoraggio> [1..1]
 s| Versione | Versione del XML di esito risposta | 10 caratteri max | Stringa | 1.0 | Sì
-6.1+^s| Inizio sessione <EsitoMonitoraggio>/<Esito> [1..1]
+6.1+^s| Inizio sezione <EsitoMonitoraggio>/<Esito> [1..1]
 s| CodiceEsito	| Esito della richiesta. Vale OK in caso di esito positivo, KO in caso di esito negativo	| Valori ammessi: +
 - OK +
 - KO	| Tipo predefinito	| OK	| Sì
 s| CodiceErrore	| Definisce il codice dell’errore |	Presente se CodiceEsito = KO	| Tipo predefinito	| ERR-002-RICHIESTA-NON-VALIDA	| No
 s| DescrizioneErrore	| Descrizione dell’errorefootnote:[per il significato dei codici d’errore si veda il paragrafo 10.3.2.]	| Presente se CodiceEsito = KO	| Stringa	| - |	No
-6.1+^s| Fine sessione <EsitoMonitoraggio>/<Esito>
-6.1+^s| Inizio sessione <EsitoMonitoraggio>/<Parametri>footnote:[questa sezione, come tutte le successive, esiste solo se _EsitoRichiesta=OK_.] [1..1]
+6.1+^s| Fine sezione <EsitoMonitoraggio>/<Esito>
+6.1+^s| Inizio sezione <EsitoMonitoraggio>/<Parametri>footnote:[questa sezione, come tutte le successive, esiste solo se _EsitoRichiesta=OK_.] [1..1]
 s| IdNotier	| Identificativo NoTI-ER del soggetto chiamante |	max 1024 caratteri	|Stringa	|Uff_test_AP_to_AP	| Sì
 s| TipoCiclo	| Specifica il flusso documentale (Inbound, Outbound) |	CA, CP	| Tipo predefinito	| CA	| Sì
 s| Urn	| URN del documento	| max 1024 caratteri	| Stringa	| urn:notier:Uff_test_AP_to_AP:2020: DDT_5f06082020_5fTEST_ 5fDEDICATED:CA:DOCUMENTO _DI_TRASPORTO:01	| No
@@ -175,20 +180,117 @@ s| StatoDocumento	| Indica il metastato del documento e quindi il suo stato dell
 - VALIDATO_NSO +
 - MANCATA_CONSEGNA +
 - NON_INVIABILE	| Tipo predefinito	| RECAPITATO	| No
-s| IdentificativoNSO	| Identificativo NSO del documento (ordine). |	max 50 caratteri |	Stringa	| 1234567	| No
+s| InviatoNso | Specifica se si effettua la ricerca per i documenti inviati a NSO (true) o per quelli non inviati a NSO (false). | true, false | booleano | false | No
+s| IdentificativoNso	| Identificativo NSO del documento (ordine). |	max 50 caratteri |	Stringa	| 1234567	| No
 s| DataInizio |	Minima data di ricezione in NoTI-ER del documento. |	|	Data	| 21092020	| No
 s| DataFine	| Massima data di ricezione in NoTI-ER del documento. |	|	Data	| 21092020	| No
 s| DataInvioInizio	| Minima data di invio documento	| | 	Data	| 21092020	| No
 s| DataInvioFine |	Massima data di invio documento	| |	Data |	21092020	| No
-6.1+^s| Inizio sessione <EsitoMonitoraggio>/<Parametri>/<Paginazione> [1..1]
+6.1+^s| Inizio sezione <EsitoMonitoraggio>/<Parametri>/<Paginazione> [1..1]
 s| Inizio	| Indice iniziale di paginazione |	numero intero di max 4 cifre	| numero	| 0	| Sì
 s| Fine	| Indice finale di paginazione	| numero intero di max 4 cifre	| numero	| 100	| Sì
-6.1+^s| Fine sessione <EsitoMonitoraggio>/<Parametri>/<Paginazione>
-6.1+^s| Fine sessione <EsitoMonitoraggio>/<Parametri>
-6.1+^s| Inizio sessione <EsitoMonitoraggio>/<ListaDocumenti> [1..1]
+6.1+^s| Fine sezione <EsitoMonitoraggio>/<Parametri>/<Paginazione>
+6.1+^s| Fine sezione <EsitoMonitoraggio>/<Parametri>
+6.1+^s| Inizio sezione <EsitoMonitoraggio>/<ListaDocumenti> [1..1]
 s| TotaleDocumenti	| totale dei documenti trovati in accordi ai filtri inseriti	| numero intero di max 4 cifre	| numero	| 15	| Sì
 s| TotaleDocumentiFiltrati	| totale dei documenti restituiti, in accordo ai filtri inseriti	| numero intero di max 4 cifre |	numero  |	8	| Sì
-6.1+^s| Inizio sessione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti> [1..1]
-6.1+^s| Inizio sessione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>/<Documento> [1..N]
+6.1+^s| Inizio sezione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti> [1..1]
+6.1+^s| Inizio sezione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>/<Documento> [1..N]
 s| Urn	| URN del documento	| max 1024 caratteri	| Stringa	| urn:notier:Uff_test_AP_to_AP: 2020:DDT_5f06082020_5fTEST _5fDEDICATED:CA:DOCUMENTO_DI_ TRASPORTO:01	| Sì
-6.1+^s| Inizio sessione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>/<Documento>/<Chiave> [1..1]
+6.1+^s| Inizio sezione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>/<Documento>/<Chiave> [1..1]
+s| Mittente	| Mittente del documento |	max 50 caratteri	| stringa |	Test Acquisizione BIS 3	| Sì
+s| Anno	| Anno del documento	| numero intero di 4 caratteri	| numero	| 2020	| Sì
+s| Numero	| Numero del documento	| max 70 caratteri	| stringa	| 280720_DDT_COUNT_1	| Sì
+s| TipoDocumento	| Tipo del documento	| I valori ammessi sono: +
+- FATTURA +
+- NOTA_DI_CREDITO +
+- DOCUMENTO_DI_TRASPORTO +
+- ORDINE +
+- NOTIFICA_MDN +
+- NOTIFICA_DI_SCARTO +
+- RICEVUTA_DI_CONSEGNA +
+- NOTIFICA_DI_MANCATA_CONSEGNA +
+- NOTIFICA_DI_ESITO_COMMITTENTE +
+- NOTIFICA_DI_ESITO_CEDENTE +
+- NOTIFICA_SCARTO_ESITO_COMMITTENTE +
+- NOTIFICA_DI_DECORRENZA_TERMINI +
+- ATTESTAZIONE_DI_FILE_NON_RECAPITABILE +
+- NOTIFICA_METADATI_FILE_FATTURA +
+- ESITO_CONSERVAZIONE	| tipo predefinito	| DOCUMENTO_DI_TRASPORTO	| Sì
+6.1+^s| Fine sezione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>/<Documento>/<Chiave>
+s| DataRicezioneNotier |	Data di ricezione del documento in NoTI-ER	| |	data e ora	| 2020-07-28T15:18:55.000+02:00	| Sì
+6.1+^s| Inizio sezione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>/<Documento>/<StatoDocumento> [1..1]
+6.1+^s| Inizio sezione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>/<Documento>/<StatoDocumento>/<Sessione> [1..N]
+s| TipoSessione	| Tipo della sessione di riferimento |I valori ammessi sono: +
+- INVIO_SDI +
+- RICEZIONE_SDI +
+- INVIO_PEPPOL +
+- RICEZIONE_PEPPOL +
+- INVIO_PARER +
+- RICEZIONE_PARER +
+- INVIO_NSO +
+- RICEZIONE_NSO	| tipo predefinito	| INVIO_SDI	| Sì
+s| StatoSessione	| Stato della sessione in oggetto. |	I valori ammessi sono: +
+- DA_INVIARE  +
+- INVIATO +
+- IN_LAVORAZIONE +
+- DA_RECAPITARE +
+- RECAPITATO +
+- CONSEGNATO +
+- NON_CONSEGNABILE +
+- ACCETTATO +
+- RIFIUTATO +
+- DECORRENZA_TERMINI +
+- DA_VERSARE +
+- VERSATO +
+- IN_ATTESA_DATI_FISCALI +
+- NON_VERSATO +
+- NON_INVIATO +
+- DA_ANNULLARE  +
+- ANNULLATO +
+- DA_INVIARE_NSO +
+- NON_INVIATO_NSO +
+- SCARTATO_NSO +
+- INVIATO_NSO +
+- NON_ANNULLABILE +
+- VALIDATO_NSO +
+- MANCATA_CONSEGNA +
+- NON_INVIABILE	| tipo predefinito	| VERSATO	| Sì
+s| DataInizioSessione	| Data di inizio sessione	| |	data e ora	| 2020-07-28T15:18:55.000+02:00	| Sì
+s| DataFineSessione	| Data di fine sessione	| |	data e ora	| 2020-07-28T15:21:58.000+02:00	| No
+s| IndirizzoIPfootnote:[traccia l’indirizzo IP del gestionale (applicativo) che ha effettuato lo scarico del documento, pertanto è valorizzato soltanto per quei documenti che si trovano in stato RECAPITATO.] 	| Indirizzo IP dell’applicativo che ha effettuato lo scarico del documento	| max 50 caratteri	| stringa	| 195.56.00.111	| No
+6.1+^s| Fine sezione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>/<Documento>/<StatoDocumento>/<Sessione>
+6.1+^s| Fine sezione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>/<Documento>/<StatoDocumento>
+s| DataInvio/DataRicezionefootnote:[il valore del tag è, in maniera mutualmente esclusiva, <DataInvio> se è stato valorizzato il filtro _tipo_ciclo=CA_ oppure <DataRicezione> se è stato valorizzato _tipo_ciclo=CP_.] | 	Data di invio o ricezione del documeto	| |	data e ora	| 2020-07-28T15:18:55.000+02:00	| No
+s| IdentificativoNSO	| Identificativo NSO del documento	| max 50 caratteri	| Stringa	| 1234567	| No
+s| IdentificativoSDI	| Identificativo SDI	del documento | max 50 caratteri	| Stringa	| 7654321	| No
+6.1+^s| Inizio sezione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>/<Documento>/<Destinatario>footnote:[il valore di questo tag xml è, in maniera mutualmente esclusiva, <Destinatario> se è stato valorizzato il filtro _tipo_ciclo=CA_ oppure <Mittente> se è stato valorizzato _tipo_ciclo=CP_.](<Mittente>) [0..1]
+s| RagioneSociale	| Ragione sociale del mittente o del destinatario |	max 1024 caratteri	| Stringa	| Operatore Economico di prova	| Sì
+s| IdPeppol	| Id Peppol del mittente o del destinatario	| max 50 caratteri	| Stringa	| 9907:369258147	| No
+s| CodiceFiscale	| Codice fiscale del mittente o del destinatario	| max 50 caratteri	| Stringa	| 369258147	| No
+s| PartitaIVA	| Partita Iva del mittente o del destinatario	| max 50 caratteri |	Stringa	| IT369258147	| No
+6.1+^s| Fine sezione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>/<Documento>/<Destinatario> (<Mittente>)
+6.1+^s| Fine sezione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>/<Documento>
+6.1+^s| Fine sezione <EsitoMonitoraggio>/<ListaDocumenti>/<Documenti>
+6.1+^s| Fine sezione <EsitoMonitoraggio>/<ListaDocumenti>
+6.1+^s| Fine sezione <EsitoMonitoraggio>
+|===
+
+==== Codici di errore
+
+In caso di risposta con esito negativo (_<CodiceEsito>KO</CodiceEsito>_), NoTI-ER valorizza il tag _<CodiceErrore>_ con uno dei valori definiti nello schema XSD di risposta.
+
+[width="100%",cols=",">,options="header,footer"]
+|===
+^| Codice ^| Errore
+| ERR-000-GENERICO	| Codice d'errore generico. Indica che NoTI-ER non è riuscito ad elaborare la richiesta a causa di un errore generico interno. +
+Rientrano in questa categoria gli errori causati ad esempio dalla non disponibilità del database o problemi di natura sistemistica. +
+Il client deve considerare la richiesta come non processata e provvedere a re-inoltrarla.
+|ERR-001-SOGGETTO-RICHIESTA-MANCANTE	| Indica che non è stato valorizzato il filtro _idnotier_ e, data l’obbligatorietà dello stesso, la richiesta non può essere processata.
+|ERR-002-RICHIESTA-NON-VALIDA	| Indica che non è stato possibile effettuare l’operazione a causa di incongruenze sulla richiesta. +
+Nello specifico, il chiamante non è autorizzato a ricercare per l’_idnotier_ specificato, oppure non è stato specificato il _tipo_ciclo_ corettamente, oppure sono stati valorizzati dei filtri con dei valori al di fuori di quelli permessi.
+|WARN-001-MITTENTE-NON-TROVATO	| Indica che non è stato trovato un soggetto corrispondente alla Partita Iva o Codice Fiscale valorizzato nel filtro _mittente_.
+|WARN-002-DESTINATARIO-NON-TROVATO	| Indica che non è stato trovato un soggetto corrispondente alla Partita Iva o Codice Fiscale valorizzato nel filtro _destinatario_.
+|WARN-003-NESSUN-RISULTATO	| Indica che non sono stati trovati documenti corrispondenti ai parametri di ricerca specificati.
+||
+|===

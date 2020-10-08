@@ -121,8 +121,8 @@ s| Versione | Versione del XML di esito risposta | 10 caratteri max | Stringa | 
 s| CodiceEsito | Esito della richiesta. Vale OK in caso di esito positivo, KO in caso di esito negativo. | Valori ammessi: +
 - OK +
 - KO  | Tipo predefinito | KO | Sì
-s| CodiceErrore | Definisce il codice dell'errorefootnote:[per la panoramica dei codici di errore e relativa descrizione, si veda il paragrafo 7.3.2.]. | CodiceEsito = KO |  Tipo predefinito | | Sì
-s| DescrizioneErrore | Descrizionde dell'errore. | CodiceEsito = KO | Stringa | | Sì
+s| CodiceErrore | Definisce il codice dell'errorefootnote:[per la panoramica dei codici di errore e relativa descrizione, si veda il paragrafo 7.3.2.]. | CodiceEsito = KO |  Tipo predefinito | | No
+s| DescrizioneErrore | Descrizionde dell'errore. | CodiceEsito = KO | Stringa | | No
 6.1+^s| Fine sessione <EsitoRichiesta>/<Esito>
 6.1+^s| Fine sessione <EsitoRichiesta>
 |===

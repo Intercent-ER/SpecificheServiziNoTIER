@@ -9,7 +9,7 @@
 :numbered:
 
 [blue]#Autore: Intercent-ER# +
-[blue]#Ultimo aggiornamento: 22/09/2020#
+[blue]#Ultimo aggiornamento: 08/10/2020#
 
 include::1.Premessa.adoc[]
 
@@ -30,3 +30,10 @@ include::8.Interrogazione_Peppol_Directory.adoc[]
 include::9.Servizio_di_Lookup_Participant_ID.adoc[]
 
 include::10.Servizio_di_monitoraggio.adoc[]
+
+include::11.Web_service_di_blocco_conservazione.adoc[]
+
+include::12.XSD_dei_servizi_esposti_da_NoTI-ER.adoc[]
+
+[Appendix]
+include::Appendice_A.Esempi_di_invocazione_dei_servizi_di_NoTI-ER.adoc[]
