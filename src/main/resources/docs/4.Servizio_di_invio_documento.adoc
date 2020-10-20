@@ -89,14 +89,15 @@ Numero del documento che identifica univocamente l'ordine/DDT
 
 Esempio 2: +
 300-0000000001 | Sì
-s| Tipo Documento | Valori ammessi: +
-
+s| Tipo Documento |
+Indica il tipo di documento che si vuole inviare
+|Valori ammessi: +
 - FATTURA +
 - NOTA_DI_CREDITO +
 - ORDINE +
 - DOCUMENTO_DI_TRASPORTO +
 - NOTIFICA_DI_ESITO_COMMITTENTE
-| Tipo predefinito | Stringa | FATTURA | Sì
+| Tipo predefinito | FATTURA | Sì
 6.1+^s| Fine sessione <InvioDocumento>/<Documento>/<Chiave>
 6.1+^s| Inizio sessione <InvioDocumento>/<Documento>/<Rappresentazione> [1..1]
 s| Formato | Formato del documento | Valori ammessi: +
